@@ -1,0 +1,7 @@
+---
+
+- name: Install packages on Ubuntu 
+  become: yes
+  apt:
+    name: "{{ apt_packages }}"
+    state: present

@@ -1,0 +1,16 @@
+---
+
+- name: Include Vars 
+  include_vars: "macos.yml"
+
+- name: Install packages on MAC 
+  become: no
+  homebrew:
+    name: "{{ brew_packages }}"
+    state: present
+
+- name: Install cask packages on MAC
+  become: no 
+  homebrew_cask:
+    name: "{{ brew_cask_packages }}"
+    state: present

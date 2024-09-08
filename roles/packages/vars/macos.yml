@@ -1,0 +1,8 @@
+---
+
+brew_packages:
+- git
+- tmux
+
+brew_cask_packages:
+- amethyst

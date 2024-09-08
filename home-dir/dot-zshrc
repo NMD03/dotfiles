@@ -1,0 +1,64 @@
+# --- Environment Variables ---
+export MODULAR_HOME="/Users/niclasdauster/.modular"
+export PATH="/Users/niclasdauster/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
+
+# --- Alias Definitions ---
+alias ls="eza"
+alias ll="eza -lah"
+alias mp="multipass"
+alias v="nvim"
+alias gh="cd ~/github/"
+alias random="cd ~/random/"
+alias home="cd ~"
+alias fuck="~/scripts/shutdown.sh"
+alias netq="networkQuality"
+
+# --- Autoload Commands ---
+autoload -U colors && colors
+autoload -Uz compinit && compinit
+autoload -Uz add-zsh-hook
+autoload -Uz vcs_info
+
+# --- Zsh Hooks ---
+add-zsh-hook precmd vcs_info
+
+# --- VCS Information Style ---
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' formats " %F{cyan}%c%u(%b)%f"
+zstyle ':vcs_info:*' actionformats " %F{cyan}%c%u(%b)%f %a"
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
+zstyle ':vcs_info:*' check-for-changes true
+
+# --- Custom Git Hooks ---
+function +vi-git-untracked() {
+  if git --no-optional-locks status --porcelain 2> /dev/null | grep -q "^??"; then
+    hook_com[staged]+="%F{red}"
+  fi
+}
+
+# --- Terminal Options ---
+setopt PROMPT_SUBST
+
+# Displays Username and Machine
+# export PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
+
+export PROMPT='%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
+
+# --- tmux Auto-start ---
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  exec tmux
+fi
+
+# --- FZF ---
+eval "$(fzf --zsh)"
+
+# --- The Fuck ---
+eval $(thefuck --alias f)
+
+# --- z ---
+. $(brew --prefix)/etc/profile.d/z.sh
+
+# --- Autosuggestions ---
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'

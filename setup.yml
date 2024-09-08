@@ -1,0 +1,8 @@
+---
+
+- name: Install software on system 
+  hosts: localhost
+  gather_facts: yes
+
+  roles:
+    - role: packages
