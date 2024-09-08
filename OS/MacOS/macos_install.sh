@@ -39,6 +39,14 @@ check_command() {
   fi
 }
 
+# --- Install Xcode Command Line Tools ---
+if ! xcode-select -p &>/dev/null; then
+  info "Installing Xcode Command Line Tools..."
+  xcode-select --install
+else
+  info "Xcode Command Line Tools are already installed."
+fi
+
 # --- Install Homebrew ---
 if ! check_command "brew"; then
   info "Install Homebrew using official install script..."
