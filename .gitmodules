@@ -1,0 +1,3 @@
+[submodule "dot-config/nvim"]
+	path = dot-config/nvim
+	url = https://github.com/NMD03/nvimrc
