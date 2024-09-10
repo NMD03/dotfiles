@@ -53,17 +53,33 @@ ansible-playbook --ask-become-pass setup.yml
 stow_config_directory="dot-config"
 stow_home_directory="home-dir"
 
-# Function to handle conflicts and convert dot- to .
+## Function to handle conflicts and convert dot- to .
+#handle_conflicts() {
+#  local stow_dir="$1"
+#  local target_dir="$2"
+#  for file_path in $(find $stow_dir -type f); do
+#    local file=$(basename $file_path)
+#    local target_file="${file/dot-/.}" # Replace 'dot-' with '.' for target file
+#    if [[ -e "$target_dir/$target_file" ]]; then
+#      # Rename the conflicting file in the target directory
+#      mv "$target_dir/$target_file" "$target_dir/$target_file.bak"
+#      info "Renamed $target_file to $target_file.bak to resolve conflict."
+#    fi
+#  done
+#}
+
 handle_conflicts() {
   local stow_dir="$1"
   local target_dir="$2"
-  for file_path in $(find $stow_dir -type f); do
-    local file=$(basename $file_path)
-    local target_file="${file/dot-/.}" # Replace 'dot-' with '.' for target file
-    if [[ -e "$target_dir/$target_file" ]]; then
-      # Rename the conflicting file in the target directory
-      mv "$target_dir/$target_file" "$target_dir/$target_file.bak"
-      info "Renamed $target_file to $target_file.bak to resolve conflict."
+  # Handle both files and directories within stow_dir
+  for item_path in $(find $stow_dir -type f -or -type d); do
+    local item=$(basename "$item_path")
+    local target_item="${item/dot-/.}" # Replace 'dot-' with '.' for target item
+
+    if [[ -e "$target_dir/$target_item" ]]; then
+      # Rename the conflicting item in the target directory
+      mv "$target_dir/$target_item" "$target_dir/$target_item.bak"
+      info "Renamed $target_item to $target_item.bak to resolve conflict."
     fi
   done
 }
@@ -72,5 +88,5 @@ handle_conflicts() {
 handle_conflicts "$DOTFILES_DIR/$stow_config_directory" "$XDG_CONFIG_HOME"
 handle_conflicts "$DOTFILES_DIR/$stow_home_directory" "$HOME"
 
-stow -v --dotfiles $stow_config_directory -t $config_directory
-stow -v --dotfiles $stow_home_directory -t $home_dir
+stow -v --dotfiles $stow_config_directory -t $XDG_CONFIG_HOME
+stow -v --dotfiles $stow_home_directory -t $HOME
