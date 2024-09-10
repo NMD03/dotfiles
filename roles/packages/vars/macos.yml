@@ -3,6 +3,17 @@
 brew_packages:
 - git
 - tmux
+- neovim
+- fzf
+- htop
+- jq
+- lxc
+- neofetch
+- radare2
+- ripgrep
+
 
 brew_cask_packages:
 - amethyst
+- alacritty
+- multipass
