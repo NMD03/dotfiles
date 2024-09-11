@@ -1,0 +1,13 @@
+---
+
+- name: Install zsh on Ubuntu
+  become: yes
+  apt:
+    name:
+      - zsh
+  state: present
+
+- name: Set zsh as default on Ubuntu
+  user:
+    name: "{{ ansible_user }}"
+    shell: /usr/bin/zsh

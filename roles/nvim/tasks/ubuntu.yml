@@ -8,12 +8,13 @@
 - name: Install requirements for Nvim on Ubuntu
   become: yes
   apt:
-    - libtool 
-    - autoconf 
-    - automake 
-    - cmake 
-    - libncurses5-dev 
-    - g++
+    name:
+      - libtool 
+      - autoconf 
+      - automake 
+      - cmake 
+      - libncurses5-dev 
+      - g++
   state: present
 
 - name: Pull Nvim repo

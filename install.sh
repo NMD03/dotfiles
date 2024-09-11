@@ -13,14 +13,17 @@ mkdir -p "$XDG_CONFIG_HOME"
 # MacOS
 if [ "$(uname)" == "Darwin" ]; then
   # Run MacOS installation script
+  chmod +x ./OS/MacOS/macos_install.sh
   ./OS/MacOS/macos_install.sh
 # Ubuntu
 elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Ubuntu" ]; then
   # Run Ubuntu installation script
+  chmod +x ./OS/Linux/ubuntu/ubuntu_install.sh
   ./OS/Linux/ubuntu/ubuntu_install.sh
 # Arch
 elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Arch" ]; then
   # Run Arch installation script
+  chmod +x ./OS/Linux/arch/arch_install.sh
   ./OS/Linux/arch/arch_install.sh
 else
   error "OS is not supported"

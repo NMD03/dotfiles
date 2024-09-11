@@ -1,0 +1,8 @@
+---
+
+- name: Install Nvim using Brew 
+  become: no 
+  brew:
+    name: 
+      - nvim 
+  state: present

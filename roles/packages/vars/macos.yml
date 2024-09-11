@@ -3,7 +3,6 @@
 brew_packages:
 - git
 - tmux
-- neovim
 - fzf
 - htop
 - jq
