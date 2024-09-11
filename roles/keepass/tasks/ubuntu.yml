@@ -1,13 +1,16 @@
 ---
 
 - name: Add KeepassXC package to apt repo
-  apt_repository:
-    repo: 'ppa:phoerious/keepassxc'
-    state: present
+  become: yes
+  ansible.builtin.command:
+      cmd: add-apt-repository ppa:phoerious/keepassxc -y
+  register: output
+  changed_when: "'updated' in output.stdout"
 
 - name: Install KeepassXC on Ubuntu
   become: yes
   apt: 
     name: keepassxc 
     state: present
+    update_cache: yes
 
