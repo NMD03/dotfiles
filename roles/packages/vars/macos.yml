@@ -10,6 +10,7 @@ brew_packages:
 - neofetch
 - radare2
 - ripgrep
+- stow
 
 
 brew_cask_packages:
