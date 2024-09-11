@@ -1,44 +1,5 @@
 #!/bin/bash
 
-# --- Helper Functions ---
-
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-GREEN='\033[0;32m'
-NC='\033[0m' # No Color
-
-# Debug output
-info() {
-  local msg=$1
-  echo -e "${BLUE}Info: $msg${NC}" >/dev/tty
-}
-
-error() {
-  local msg=$1
-  echo -e "${RED}Error: $msg${NC}" >/dev/tty
-}
-
-warn() {
-  local msg=$1
-  echo -e "${YELLOW}Warning: $msg${NC}" >/dev/tty
-}
-
-success() {
-  local msg=$1
-  echo -e "${GREEN}Success: $msg${NC}" >/dev/tty
-}
-
-# Installed software
-check_command() {
-  local command=$1
-  if command -v "$command" &>/dev/null; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 # --- Install Xcode Command Line Tools ---
 if ! xcode-select -p &>/dev/null; then
   info "Installing Xcode Command Line Tools..."

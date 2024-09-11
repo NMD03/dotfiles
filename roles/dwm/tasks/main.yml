@@ -1,0 +1,11 @@
+---
+
+- name: Install DWM on Ubuntu
+  import_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+#- name: Install DWM on Arch
+#  import_tasks: arch.yml
+#  when: ansible_distribution == "Arch"
+
+
