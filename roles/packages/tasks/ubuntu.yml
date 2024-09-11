@@ -1,5 +1,8 @@
 ---
 
+- name: Include Vars
+  include_vars: "ubuntu.yml"
+
 - name: Install packages on Ubuntu 
   become: yes
   apt:
