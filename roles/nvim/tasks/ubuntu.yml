@@ -15,12 +15,17 @@
       - cmake 
       - libncurses5-dev 
       - g++
+      - ninja-build 
+      - gettext 
+      - libtool-bin
+      - pkg-config 
+      - unzip
     state: present
 
 - name: Pull Nvim repo
   git:
     repo: https://github.com/neovim/neovim
-    dest: "{{ ansible_env.HOME }}/neovim"    
+    dest: "{{ ansible_env.HOME }}/nvim"    
     clone: true
     depth: 1
     version: stable
@@ -29,4 +34,5 @@
   become: true
   ansible.builtin.command: sudo make install
   args:
-    chdir: "{{ ansible_env.HOME }}/neovim"
+    chdir: "{{ ansible_env.HOME }}/nvim"
+
