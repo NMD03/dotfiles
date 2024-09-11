@@ -1,0 +1,13 @@
+---
+
+- name: Add KeepassXC package to apt repo
+  apt_repository:
+    repo: 'ppa:phoerious/keepassxc'
+    state: present
+
+- name: Install KeepassXC on Ubuntu
+  become: yes
+  apt: 
+    name: keepassxc 
+    state: present
+

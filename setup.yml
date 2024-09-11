@@ -6,3 +6,7 @@
 
   roles:
     - role: packages
+    - role: nvim
+    - role: keepass
+    - role: zsh
+    - role: dwm

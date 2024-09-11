@@ -6,7 +6,7 @@ This repo contains the configuration for my system. The installation of software
 
 First clone this repo to a location where you want to manage your config files from. For example:
 ```bash
-git clone https://github.com/NMD03/dotfiles ~/.dotfiles
+git clone --recurse-submodules https://github.com/NMD03/dotfiles ~/.dotfiles
 ```
 You can start a complete setup of a system including the installation of software as well as creating the symlinks for the config files using the installation script:
 ```bash

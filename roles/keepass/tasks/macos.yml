@@ -1,0 +1,8 @@
+---
+
+- name: Install KeepassXC on MacOS
+  become: no 
+  homebrew_cask:
+    name: keepassxc 
+    state: present
+

@@ -1,0 +1,11 @@
+---
+
+apt_packages:
+- git
+- tmux
+- htop
+- jq
+- neofetch
+- curl
+- wget
+

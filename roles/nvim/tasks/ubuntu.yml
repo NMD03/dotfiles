@@ -1,0 +1,31 @@
+---
+
+- name: Remove old Nvim
+  ansible.builtin.file:
+      path: "{{ ansible_env.HOME }}/neovim"
+      state: absent
+
+- name: Install requirements for Nvim on Ubuntu
+  become: yes
+  apt:
+    - libtool 
+    - autoconf 
+    - automake 
+    - cmake 
+    - libncurses5-dev 
+    - g++
+  state: present
+
+- name: Pull Nvim repo
+  git:
+    repo: https://github.com/neovim/neovim
+    dest: "{{ ansible_env.HOME }}/neovim"    
+    clone: true
+    depth: 1
+    version: stable
+
+- name: Make install of Nvim
+  become: true
+  ansible.builtin.command: sudo make install
+  args:
+    chdir: "{{ ansible_env.HOME }}/neovim"
