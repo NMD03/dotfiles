@@ -2,7 +2,7 @@
 
 - name: Install Nvim using Brew 
   become: no 
-  brew:
+  homebrew:
     name: 
       - nvim 
     state: present
