@@ -5,7 +5,7 @@
   apt:
     name:
       - zsh
-  state: present
+    state: present
 
 - name: Set zsh as default on Ubuntu
   user:

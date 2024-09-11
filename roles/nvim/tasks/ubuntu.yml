@@ -15,7 +15,7 @@
       - cmake 
       - libncurses5-dev 
       - g++
-  state: present
+    state: present
 
 - name: Pull Nvim repo
   git:

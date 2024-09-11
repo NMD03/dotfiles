@@ -5,4 +5,4 @@
   brew:
     name: 
       - nvim 
-  state: present
+    state: present
