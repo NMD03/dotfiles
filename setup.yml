@@ -10,3 +10,4 @@
     - role: keepass
     - role: zsh
     - role: dwm
+    - role: alacritty
