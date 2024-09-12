@@ -11,6 +11,7 @@ brew_packages:
 - radare2
 - ripgrep
 - stow
+- zsh-autosuggestion
 
 
 brew_cask_packages:

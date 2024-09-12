@@ -12,4 +12,5 @@ apt_packages:
 - eza
 - fzf
 - thefuck
+- zsh-autosuggestion
 
