@@ -8,6 +8,7 @@
     state: present
 
 - name: Set zsh as default on Ubuntu
+  become: yes
   user:
-    name: "{{ ansible_user }}"
+    name: "{{ ansible_env.USER  }}"
     shell: /usr/bin/zsh
