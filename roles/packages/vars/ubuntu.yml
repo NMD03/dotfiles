@@ -9,4 +9,7 @@ apt_packages:
 - curl
 - wget
 - stow
+- eza
+- fzf
+- thefuck
 

@@ -1,6 +1,6 @@
 # --- Environment Variables ---
-export MODULAR_HOME="/Users/niclasdauster/.modular"
-export PATH="/Users/niclasdauster/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
+export MODULAR_HOME="$HOME/.modular"
+export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:$PATH"
 
 # --- Alias Definitions ---
 alias ls="eza"
@@ -56,9 +56,22 @@ eval "$(fzf --zsh)"
 # --- The Fuck ---
 eval $(thefuck --alias f)
 
-# --- z ---
-. $(brew --prefix)/etc/profile.d/z.sh
 
-# --- Autosuggestions ---
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Check OS type and configure accordingly
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS specific aliases and paths
+    . $(brew --prefix)/etc/profile.d/z.sh
+    source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Linux specific settings
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+
+## --- z ---
+#. $(brew --prefix)/etc/profile.d/z.sh
+#
+## --- Autosuggestions ---
+#source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'

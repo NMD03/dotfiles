@@ -28,7 +28,7 @@
     update: yes
 
 - name: Compile Alacritty
-  shell: cargo build --release
+  shell: ~/.cargo/bin/cargo build --release
   args:
     chdir: "~/alacritty"
 
