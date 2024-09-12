@@ -15,5 +15,4 @@ brew_packages:
 
 brew_cask_packages:
 - amethyst
-- alacritty
 - multipass

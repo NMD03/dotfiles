@@ -1,0 +1,8 @@
+---
+
+- name: Install alacritty on MacOS using brew
+  become: no 
+  homebrew_cask:
+    name: alacritty
+    state: present
+
