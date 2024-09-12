@@ -11,3 +11,4 @@
     - role: zsh
     - role: dwm
     - role: alacritty
+    - role: fonts

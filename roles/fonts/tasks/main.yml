@@ -1,0 +1,11 @@
+---
+
+- name: Pull ubuntu font repo
+  git:
+    repo: 'https://github.com/ryanoasis/nerd-fonts.git'
+    dest: /tmp/nerd-fonts
+    version: master
+    clone: yes
+
+- name: Install ubunut fonts 
+  shell: /tmp/nerd-fonts/install.sh 
