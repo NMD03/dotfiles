@@ -1,9 +1,9 @@
 .PHONY: all delete
 
 all: 
-	stow --verbose --dotfiles --restow dot-config -t ~/.config
-	stow --verbose --dotfiles --restow home-dir -t ~/
+	stow --verbose --dotfiles --restow CONFIG -t ~/.config
+	stow --verbose --dotfiles --restow HOME -t ~/
 
 delete:
-	stow --verbose --dotfiles --delete dot-config -t ~/.config
-	stow --verbose --dotfiles --delete home-dir -t ~/
+	stow --verbose --dotfiles --delete CONFIG -t ~/.config
+	stow --verbose --dotfiles --delete HOME -t ~/

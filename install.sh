@@ -34,8 +34,8 @@ ansible-playbook --ask-become-pass setup.yml
 
 # --- Create symlinks for config files using stow ---
 
-stow_config_directory="dot-config"
-stow_home_directory="home-dir"
+stow_config_directory="CONFIG"
+stow_home_directory="HOME"
 
 ## Function to handle conflicts and convert dot- to .
 handle_conflicts() {
