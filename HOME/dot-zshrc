@@ -9,9 +9,11 @@ alias mp="multipass"
 alias v="nvim"
 alias gh="cd ~/github/"
 alias random="cd ~/random/"
-alias home="cd ~"
 alias fuck="~/scripts/shutdown.sh"
-alias netq="networkQuality"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias netq="networkQuality"
+fi 
 
 # --- Autoload Commands ---
 autoload -U colors && colors
@@ -56,7 +58,7 @@ eval "$(fzf --zsh)"
 # --- The Fuck ---
 eval $(thefuck --alias f)
 
-
+# --- Autosuggestions ---
 # Check OS type and configure accordingly
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS specific aliases and paths
@@ -66,12 +68,5 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux specific settings
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
-
-
-## --- z ---
-#. $(brew --prefix)/etc/profile.d/z.sh
-#
-## --- Autosuggestions ---
-#source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
