@@ -1,0 +1,8 @@
+---
+
+- name: Install software after conifg
+  hosts: localhost
+  gather_facts: yes
+
+  roles:
+    - role: dwm

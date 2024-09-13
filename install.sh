@@ -33,9 +33,20 @@ fi
 ansible-playbook --ask-become-pass setup.yml
 
 # --- Create symlinks for config files using stow ---
-
 stow_config_directory="CONFIG"
 stow_home_directory="HOME"
+# MacOS
+macos_stow_config_directory="./OS/MacOS/CONFIG"
+macos_stow_home_directory="./OS/MacOS/HOME"
+# Ubuntu
+ubuntu_stow_config_directory="./OS/Linux/ubuntu/CONFIG"
+ubuntu_stow_home_directory="./OS/Linux/ubuntu/HOME"
+# Arch
+arch_stow_config_directory="./OS/Linux/arch/CONFIG"
+arch_stow_home_directory="./OS/Linux/arch/HOME"
+# Linux
+linux_stow_config_directory="./OS/Linux/CONFIG"
+linux_stow_home_directory="./OS/Linux/HOME"
 
 ## Function to handle conflicts and convert dot- to .
 handle_conflicts() {
@@ -57,6 +68,22 @@ handle_conflicts() {
 # Resolve conflicts by renaming existing files in the target directories
 handle_conflicts "$DOTFILES_DIR/$stow_config_directory" "$XDG_CONFIG_HOME"
 handle_conflicts "$DOTFILES_DIR/$stow_home_directory" "$HOME"
+# MacOS
+if [ "$(uname)" == "Darwin" ]; then
+  handle_conflicts "$DOTFILES_DIR/$macos_stow_config_directory" "$XDG_CONFIG_HOME"
+  handle_conflicts "$DOTFILES_DIR/$macos_stow_home_directory" "$HOME"
+# Ubuntu
+elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Ubuntu" ]; then
+  handle_conflicts "$DOTFILES_DIR/$ubuntu_stow_config_directory" "$XDG_CONFIG_HOME"
+  handle_conflicts "$DOTFILES_DIR/$ubuntu_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_config_directory" "$XDG_CONFIG_HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_home_directory" "$HOME"
+# Arch
+elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Arch" ]; then
+  handle_conflicts "$DOTFILES_DIR/$arch_stow_config_directory" "$XDG_CONFIG_HOME"
+  handle_conflicts "$DOTFILES_DIR/$arch_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_config_directory" "$XDG_CONFIG_HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_home_directory" "$HOME"
 
-stow -v --dotfiles $stow_config_directory -t $XDG_CONFIG_HOME
-stow -v --dotfiles $stow_home_directory -t $HOME
+make
+

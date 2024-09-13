@@ -9,6 +9,5 @@
     - role: nvim
     - role: keepass
     - role: zsh
-    - role: dwm
     - role: alacritty
     - role: fonts
