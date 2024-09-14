@@ -52,18 +52,19 @@ if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] &&
   exec tmux
 fi
 
-# --- FZF ---
-eval "$(fzf --zsh)"
-
-# --- The Fuck ---
-eval $(thefuck --alias f)
-
 # --- Autosuggestions ---
 # Check OS type and configure accordingly
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS specific aliases and paths
     . $(brew --prefix)/etc/profile.d/z.sh
     source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+    # --- FZF ---
+    eval "$(fzf --zsh)"
+
+    # --- The Fuck ---
+    eval $(thefuck --alias f)
+
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # Linux specific settings
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
