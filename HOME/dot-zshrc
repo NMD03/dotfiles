@@ -30,7 +30,6 @@ autoload -Uz vcs_info
 
 # Function to dynamically update the prompt
 function update_prompt {
-    echo "Debug: Updating prompt. SSH_CONNECTION=$SSH_CONNECTION"
     if [[ -n "$SSH_CONNECTION" ]]; then
         PROMPT='%{$fg[yellow]%}(%m)%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
     else
