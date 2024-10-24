@@ -1,6 +1,13 @@
 # --- Environment Variables ---
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # Some things for android app dev
+  export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home"
+  export ANDROID_PLATFROM_TOOLS="$HOME/Library/Android/sdk/platform-tools"
+  export ANDROID_BUILD_TOOLS="$HOME/Library/Android/sdk/build-tools/35.0.0/"
+  export JAVA="$JAVA_HOME/bin"
+fi
 export MODULAR_HOME="$HOME/.modular"
-export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:${ANDROID_PLATFROM_TOOLS:-}:${ANDROID_BUILD_TOOLS:-}:${JAVA:-}:$PATH"
 
 # --- Alias Definitions ---
 alias ls="eza"
@@ -21,8 +28,19 @@ autoload -Uz compinit && compinit
 autoload -Uz add-zsh-hook
 autoload -Uz vcs_info
 
+# Function to dynamically update the prompt
+function update_prompt {
+    echo "Debug: Updating prompt. SSH_CONNECTION=$SSH_CONNECTION"
+    if [[ -n "$SSH_CONNECTION" ]]; then
+        PROMPT='%{$fg[yellow]%}(%m)%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
+    else
+        PROMPT='%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
+    fi
+}
+
 # --- Zsh Hooks ---
 add-zsh-hook precmd vcs_info
+add-zsh-hook precmd update_prompt
 
 # --- VCS Information Style ---
 zstyle ':vcs_info:*' enable git
@@ -45,7 +63,7 @@ setopt PROMPT_SUBST
 # Displays Username and Machine
 # export PROMPT='%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
 
-export PROMPT='%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
+#export PROMPT='%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
 
 # --- tmux Auto-start ---
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
