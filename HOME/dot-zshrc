@@ -28,14 +28,6 @@ autoload -Uz compinit && compinit
 autoload -Uz add-zsh-hook
 autoload -Uz vcs_info
 
-# Function to dynamically update the prompt
-#function update_prompt {
-#    if [[ -n "$SSH_CONNECTION" ]]; then
-#        PROMPT='%{$fg[yellow]%}(%m)%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
-#    else
-#        PROMPT='%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% '
-#    fi
-#}
 
 function update_prompt {
     # Extract the name of the virtual environment by taking the basename of the VIRTUAL_ENV path
@@ -46,7 +38,7 @@ function update_prompt {
 
     # Update prompt based on SSH connection and virtual environment status
     if [[ -n "$SSH_CONNECTION" ]]; then
-        PROMPT="${pyenv}%{$fg[blue]%}(%m)%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="${pyenv}%{$fg[yellow]%}[%m]%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
     else
         PROMPT="${pyenv}%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
     fi
