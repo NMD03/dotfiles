@@ -1,5 +1,5 @@
 [font]
-size = 8
+size = 15
 
 [font.normal]
 family = "UbuntuMono Nerd Font"
@@ -21,3 +21,10 @@ action = "IncreaseFontSize"
 key = "-"
 mods = "Control"
 action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Tab"
+chars = "\t"  # Ensure Tab sends the correct character
+
+[env]
+TERM = "xterm-256color"
