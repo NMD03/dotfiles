@@ -5,9 +5,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export ANDROID_PLATFROM_TOOLS="$HOME/Library/Android/sdk/platform-tools"
   export ANDROID_BUILD_TOOLS="$HOME/Library/Android/sdk/build-tools/35.0.0/"
   export JAVA="$JAVA_HOME/bin"
+  export GOPATH="$HOME/go/bin"
+
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  export GOPATH="$HOME/go/bin/"
 fi
+
 export MODULAR_HOME="$HOME/.modular"
-export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:${ANDROID_PLATFROM_TOOLS:-}:${ANDROID_BUILD_TOOLS:-}:${JAVA:-}:$PATH"
+export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:${ANDROID_PLATFROM_TOOLS:-}:${ANDROID_BUILD_TOOLS:-}:${JAVA:-}:${GOPATH:-}:$PATH"
 
 # --- Alias Definitions ---
 alias ls="eza"
