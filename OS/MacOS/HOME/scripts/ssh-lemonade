@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Check for remote server argument
+if [ -z "$1" ]; then
+  echo "Usage: $0 <remote.server.com>"
+  exit 1
+fi
+
+remote_server="$1"
+
+# Check if Lemonade server is running
+ps cax | grep lemonade >/dev/null
+if [ $? -eq 0 ]; then
+  echo "Lemonade is running."
+else
+  echo "Lemonade is not running."
+  nohup lemonade server &
+fi
+
+# Establish SSH connection with reverse port forwarding
+ssh -R 2489:127.0.0.1:2489 $remote_server
