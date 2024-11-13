@@ -7,13 +7,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   export JAVA="$JAVA_HOME/bin"
   export GOPATH="$HOME/go/bin"
   export SCRIPTS="$HOME/scripts/"
+  export LATEX="/usr/local/texlive/2024/bin/universal-darwin/"
 
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
   export GOPATH="$HOME/go/bin/"
 fi
 
 export MODULAR_HOME="$HOME/.modular"
-export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:${ANDROID_PLATFROM_TOOLS:-}:${ANDROID_BUILD_TOOLS:-}:${JAVA:-}:${GOPATH:-}:$PATH:${SCRIPTS:-}"
+export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$HOME/.cargo/bin:${ANDROID_PLATFROM_TOOLS:-}:${ANDROID_BUILD_TOOLS:-}:${JAVA:-}:${GOPATH:-}:$PATH:${SCRIPTS:-}:${LATEX:-}"
 
 # --- Alias Definitions ---
 alias ls="eza"
@@ -26,6 +27,7 @@ alias fuck="~/scripts/shutdown.sh"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   alias netq="networkQuality"
+  alias uni="cd ~/Documents/Uni/Lectures/sem2/"
 fi 
 
 # --- Autoload Commands ---
@@ -44,7 +46,7 @@ function update_prompt {
 
     # Update prompt based on SSH connection and virtual environment status
     if [[ -n "$SSH_CONNECTION" ]]; then
-        PROMPT="${pyenv}%{$fg[yellow]%}[%m]%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="${pyenv}%{$fg[red]%}[%m]%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
     else
         PROMPT="${pyenv}%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
     fi
