@@ -12,7 +12,7 @@
 # @raycast.description toggles the opacity of the Alacritty terminal
 
 CONFIG=~/.config/alacritty/alacritty.toml
-LOW_OPACITY="opacity = 0.5"
+LOW_OPACITY="opacity = 0.8"
 HIGH_OPACITY="opacity = 1.0"
 CURRENT_OPACITY=$(grep "opacity" $CONFIG)
 
