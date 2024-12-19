@@ -46,9 +46,9 @@ function update_prompt {
 
     # Update prompt based on SSH connection and virtual environment status
     if [[ -n "$SSH_CONNECTION" ]]; then
-        PROMPT="${pyenv}%{$fg[red]%}[%m]%{$reset_color%} %{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="%{$fg[red]%}[%m]%{$reset_color%}%{$fg[yellow]%}→ ${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
     else
-        PROMPT="${pyenv}%{$fg[yellow]%}%~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="%{$fg[yellow]%}→ ${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
     fi
 }
 
