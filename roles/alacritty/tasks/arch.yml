@@ -1,0 +1,7 @@
+---
+
+- name: Install alacritty on Arch Linux using pacman
+  become: yes
+  pacman:
+    name: alacritty
+    state: present

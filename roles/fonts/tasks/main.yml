@@ -1,11 +1,15 @@
 ---
 
-- name: Pull ubuntu font repo
-  git:
-    repo: 'https://github.com/ryanoasis/nerd-fonts.git'
-    dest: /tmp/nerd-fonts
-    version: master
-    clone: yes
+- name: Install packages on MacOS
+  import_tasks: macos.yml
+  when: ansible_distribution == "MacOSX"
 
-- name: Install ubunut fonts 
-  shell: /tmp/nerd-fonts/install.sh 
+- name: Install packages on Ubuntu
+  import_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install packages on Arch
+  import_tasks: arch.yml
+  when: ansible_distribution == "Arch"
+
+

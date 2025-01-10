@@ -1,0 +1,7 @@
+---
+
+- name: Install Ubuntu nerd fonts
+  become: yes
+  ansible.builtin.command:
+        cmd: yay -S ttf-ubuntu-font-family --noconfirm
+

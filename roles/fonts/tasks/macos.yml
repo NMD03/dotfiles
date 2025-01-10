@@ -1,0 +1,7 @@
+---
+
+- name: Install Ubuntu Nerd fonts
+  become: no
+  homebrew:
+    name: font-hack-nerd-font
+    state: present

@@ -1,0 +1,7 @@
+---
+
+- name: Install nvim using pacman
+  become: yes
+  pacman:
+    name: nvim
+    state: present

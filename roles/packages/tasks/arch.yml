@@ -1,0 +1,11 @@
+---
+
+- name: Include Vars
+  include_vars: "arch.yml"
+
+- name: Install packages on Arch
+  become: yes
+  pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+

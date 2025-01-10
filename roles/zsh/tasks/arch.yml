@@ -1,0 +1,13 @@
+---
+
+- name: Install zsh on Arch Linux
+  become: yes
+  pacman:
+    name: zsh
+    state: present
+
+- name: Set zsh as the default shell on Arch Linux
+  become: yes
+  user:
+    name: "{{ ansible_env.USER }}"
+    shell: /usr/bin/zsh

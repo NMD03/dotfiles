@@ -84,6 +84,7 @@ elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Arch" ]; then
   handle_conflicts "$DOTFILES_DIR/$arch_stow_home_directory" "$HOME"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_home_directory" "$HOME"
+fi
 
 make
 

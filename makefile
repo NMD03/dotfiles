@@ -11,8 +11,8 @@ general:
 
 # Linux specific configurations
 Linux:
-	stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/ HOME
+	#stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/.config CONFIG
+	#stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/ HOME
 	@if [ "$(DISTRO)" = "Ubuntu" ]; then \
 		echo "Applying Ubuntu-specific configurations..."; \
 		$(MAKE) ubuntu; \
