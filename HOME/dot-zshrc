@@ -106,7 +106,4 @@ fi
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 
 if [[ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Arch" ]]; then
-    if uwsm check may-start && uwsm select; then
-	    exec systemd-cat -t uwsm_start uwsm start default
-    fi
 fi
