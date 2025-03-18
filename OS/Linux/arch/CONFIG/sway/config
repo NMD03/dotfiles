@@ -212,6 +212,9 @@ bindsym $mod+r mode "resize"
 # Custom Keybindings
 bindsym $mod+Ctrl+l exec swaylock --config ~/.config/swaylock/config
 
+# Custom Settings
+for_window [class=".*"] border none
+
 # Status Bar:
 bar swaybar_command waybar
 
