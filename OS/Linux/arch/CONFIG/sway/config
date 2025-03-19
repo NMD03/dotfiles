@@ -208,6 +208,10 @@ bindsym $mod+r mode "resize"
     # Special key to take a screenshot with grim
     bindsym Print exec grim
 
+# Automatically turn off screen when locked
+exec_always swayidle -w \
+    timeout 10 'pgrep swaylock && swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' &
 
 # Custom Keybindings
 bindsym $mod+Ctrl+l exec swaylock --config ~/.config/swaylock/config

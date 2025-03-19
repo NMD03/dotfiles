@@ -12,6 +12,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
   export GOPATH="$HOME/go/bin/"
+  export JAVA_HOME="/opt/amazon-corretto-11.0.26.4.1-linux-x64"
+  export JAVA="$JAVA_HOME/bin"
 fi
 
 export MODULAR_HOME="$HOME/.modular"
