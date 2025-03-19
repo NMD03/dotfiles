@@ -7,7 +7,6 @@ datestr=%a, %e of %B
 
 screenshots
 
-
 effect-blur=20x2
 effect-greyscale
 effect-scale=0.3
@@ -17,11 +16,11 @@ indicator-radius=240
 indicator-thickness=20
 indicator-caps-lock
 
-key-hl-color=880033
+key-hl-color=ffffffff
 
 separator-color=00000000
 
-inside-color=00000099
+inside-color=000000
 inside-clear-color=ffd20400
 inside-caps-lock-color=009ddc00
 inside-ver-color=d9d8d800
