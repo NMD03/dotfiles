@@ -1,0 +1,54 @@
+- name: Install sway and related packages using apt
+  become: yes
+  apt:
+    name:
+      - sway
+      - waybar
+    state: present
+    update_cache: yes
+
+# install swaylock-effects (experimental)    
+- name: Install build dependencies for swaylock-effects on Ubuntu
+  become: yes
+  apt:
+    name:
+      - git
+      - meson
+      - ninja-build
+      - pkg-config
+      - libwayland-dev
+      - libxkbcommon-dev
+      - libxcb-composite0-dev
+      - libxcb-image0-dev
+      - libxcb-xfixes0-dev
+      - libxcb-icccm4-dev
+      - libxcb-ewmh-dev
+      - libxcb-keysyms1-dev
+      - libpam0g-dev
+      - wayland-protocols
+    state: present
+    update_cache: yes
+
+- name: Clone swaylock-effects repository
+  git:
+    repo: "https://github.com/mborgerding/swaylock-effects.git"  # Replace with the correct repo URL if needed.
+    dest: /tmp/swaylock-effects
+    version: master
+    force: yes
+
+- name: Configure swaylock-effects build with meson
+  command: meson setup build --prefix=/usr
+  args:
+    chdir: /tmp/swaylock-effects
+
+- name: Build swaylock-effects with ninja
+  command: ninja -C build
+  args:
+    chdir: /tmp/swaylock-effects
+
+- name: Install swaylock-effects
+  become: yes
+  command: ninja -C build install
+  args:
+    chdir: /tmp/swaylock-effects
+

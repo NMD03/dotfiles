@@ -1,0 +1,13 @@
+- name: Install sway and related packages using pacman
+  become: yes
+  pacman:
+    name:
+      - sway
+      - swaybg
+      - waybar
+    state: present
+
+- name: Install swaylock-effects-git using yay
+  become: no
+  command: yay -S --noconfirm swaylock-effects-git
+

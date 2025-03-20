@@ -10,6 +10,6 @@
 
 - name: Install packages on Arch
   import_tasks: arch.yml
-  when: ansible_distribution == "Arch"
+  when: ansible_distribution == "Archlinux"
 
 

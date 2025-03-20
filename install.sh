@@ -2,6 +2,7 @@
 
 DOTFILES_DIR="."
 XDG_CONFIG_HOME="$HOME/.config"
+ETC="/etc"
 
 # --- Import Helper Functions ---
 source ./helper.sh
@@ -35,18 +36,23 @@ ansible-playbook --ask-become-pass setup.yml
 # --- Create symlinks for config files using stow ---
 stow_config_directory="CONFIG"
 stow_home_directory="HOME"
+stow_etc_directory="ETC"
 # MacOS
 macos_stow_config_directory="./OS/MacOS/CONFIG"
 macos_stow_home_directory="./OS/MacOS/HOME"
+macos_stow_etc_directory="./OS/MacOS/ETC"
 # Ubuntu
 ubuntu_stow_config_directory="./OS/Linux/ubuntu/CONFIG"
 ubuntu_stow_home_directory="./OS/Linux/ubuntu/HOME"
+ubuntu_stow_etc_directory="./OS/Linux/ubuntu/ETC"
 # Arch
 arch_stow_config_directory="./OS/Linux/arch/CONFIG"
 arch_stow_home_directory="./OS/Linux/arch/HOME"
+arch_stow_etc_directory="./OS/Linux/arch/ETC"
 # Linux
 linux_stow_config_directory="./OS/Linux/CONFIG"
 linux_stow_home_directory="./OS/Linux/HOME"
+linux_stow_etc_directory="./OS/Linux/ETC"
 
 ## Function to handle conflicts and convert dot- to .
 handle_conflicts() {
@@ -68,22 +74,29 @@ handle_conflicts() {
 # Resolve conflicts by renaming existing files in the target directories
 handle_conflicts "$DOTFILES_DIR/$stow_config_directory" "$XDG_CONFIG_HOME"
 handle_conflicts "$DOTFILES_DIR/$stow_home_directory" "$HOME"
+handle_conflicts "$DOTFILES_DIR/$stow_etc_directory" "$ETC"
+
 # MacOS
 if [ "$(uname)" == "Darwin" ]; then
   handle_conflicts "$DOTFILES_DIR/$macos_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$macos_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$macos_stow_etc_directory" "$ETC"
 # Ubuntu
 elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Ubuntu" ]; then
   handle_conflicts "$DOTFILES_DIR/$ubuntu_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$ubuntu_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$ubuntu_stow_etc_directory" "$ETC"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_etc_directory" "$ETC"
 # Arch
 elif [ "$(lsb_release -i 2>/dev/null | cut -f 2)" == "Arch" ]; then
   handle_conflicts "$DOTFILES_DIR/$arch_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$arch_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$arch_stow_etc_directory" "$ETC"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_config_directory" "$XDG_CONFIG_HOME"
   handle_conflicts "$DOTFILES_DIR/$linux_stow_home_directory" "$HOME"
+  handle_conflicts "$DOTFILES_DIR/$linux_stow_etc_directory" "$ETC"
 fi
 
 make

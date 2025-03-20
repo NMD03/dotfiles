@@ -11,3 +11,4 @@
     - role: zsh
     - role: alacritty
     - role: fonts
+    - role: sway

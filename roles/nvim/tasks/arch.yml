@@ -3,5 +3,5 @@
 - name: Install nvim using pacman
   become: yes
   pacman:
-    name: nvim
+    name: neovim
     state: present

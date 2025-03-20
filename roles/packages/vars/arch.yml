@@ -4,3 +4,6 @@ pacman_packages:
 - git
 - stow
 - eza
+- keyd
+- emptty
+- yay
