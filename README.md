@@ -31,13 +31,4 @@ ansible-playbook --ask-become-pass setup.yml
 
 ## TODOs
 
-- Add software to Ansible Roles
 - Add Nvim Mason dependencies to be installed automatically
-- Add new ETC folder on all levels to be able to link files to /etc
-- Add packages for sway:
-    - sway packages
-    - waybar
-    - kickoff
-- Add packages to arch install:
-    - keyd
-    - emptty

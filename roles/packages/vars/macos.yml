@@ -12,6 +12,7 @@ brew_packages:
 - ripgrep
 - stow
 - zsh-autosuggestions
+- rust
 
 
 brew_cask_packages:

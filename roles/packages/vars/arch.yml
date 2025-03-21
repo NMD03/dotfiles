@@ -8,3 +8,4 @@ pacman_packages:
 - emptty
 - yay
 - kickoff
+- rust
