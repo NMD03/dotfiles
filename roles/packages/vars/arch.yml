@@ -7,3 +7,4 @@ pacman_packages:
 - keyd
 - emptty
 - yay
+- kickoff
