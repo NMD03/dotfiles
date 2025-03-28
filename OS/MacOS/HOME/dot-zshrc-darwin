@@ -1,0 +1,30 @@
+# ~/.zshrc-darwin
+
+# --- macOS-specific Environment Variables ---
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home"
+export ANDROID_PLATFROM_TOOLS="$HOME/Library/Android/sdk/platform-tools"
+export ANDROID_BUILD_TOOLS="$HOME/Library/Android/sdk/build-tools/35.0.0/"
+export JAVA="$JAVA_HOME/bin"
+export GOPATH="$HOME/go/bin"
+export SCRIPTS="$HOME/scripts/"
+export LATEX="/usr/local/texlive/2024/bin/universal-darwin/"
+export LOCAL_BIN="$HOME/.local/bin"
+
+# Append macOS-specific paths to PATH
+export PATH="${ANDROID_PLATFROM_TOOLS}:${ANDROID_BUILD_TOOLS}:${JAVA}:${GOPATH}:${SCRIPTS}:${LATEX}:${LOCAL_BIN}:$PATH"
+
+# --- macOS-specific Aliases ---
+alias netq="networkQuality"
+alias uni="cd ~/Documents/Uni/Lectures/sem2/"
+
+# --- macOS-specific Tools & Autosuggestions ---
+# Load additional tools installed via Homebrew:
+if command -v brew &> /dev/null; then
+    . "$(brew --prefix)/etc/profile.d/z.sh"
+    source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+
+# --- FZF and The Fuck ---
+eval "$(fzf --zsh)"
+eval "$(thefuck --alias f)"
+

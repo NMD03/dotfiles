@@ -1,0 +1,14 @@
+# ~/.zshrc-linux
+
+# --- Linux-specific Environment Variables ---
+export GOPATH="$HOME/go/bin/"
+export JAVA_HOME="/opt/amazon-corretto-11.0.26.4.1-linux-x64"
+export JAVA="$JAVA_HOME/bin"
+
+# Append Linux-specific paths to PATH
+export PATH="${JAVA}:${GOPATH}:$PATH"
+
+# --- Linux-specific Autosuggestions ---
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+
