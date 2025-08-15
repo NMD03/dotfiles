@@ -1,0 +1,7 @@
+---
+
+- name: Install Alacritty on Fedora
+  become: yes
+  dnf:
+    name: alacritty
+    state: present

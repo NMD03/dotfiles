@@ -1,0 +1,15 @@
+---
+
+- name: Install and set zsh as the default shell on Fedora
+  hosts: all
+  become: yes
+  dnf:
+    name: zsh
+    state: present
+
+- name: Set zsh as the default shell
+  become: yes
+  user:
+    name: "{{ ansible_env.USER }}"
+    shell: /bin/zsh
+

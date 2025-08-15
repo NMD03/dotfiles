@@ -21,6 +21,9 @@ Linux:
 	elif [ "$(DISTRO)" = "Arch Linux" ]; then \
 		echo "Applying Arch-specific configurations..."; \
 		$(MAKE) arch; \
+	elif [ "$(DISTRO)" = "Fedora Linux" ]; then \
+		echo "Applying Fedora-specific configurations..."; \
+		$(MAKE) fedora; \
 	fi
 
 ubuntu:
@@ -32,6 +35,11 @@ arch:
 	stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t ~/.config CONFIG
 	stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t ~/ HOME
 	sudo stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t /etc ETC
+
+fedora:
+	stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t ~/.config CONFIG
+	stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t ~/ HOME
+	sudo stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t /etc ETC
 
 # MacOS specific configurations
 Darwin:
@@ -63,6 +71,11 @@ delete:
 			stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t ~/.config CONFIG; \
 			stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t ~/ HOME; \
 			sudo stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t /etc ETC; \
+		elif [ "$(DISTRO)" = "Fedora Linux" ]; then \
+			echo "Removing Fedora-specific configurations..."; \
+			stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t ~/.config CONFIG; \
+			stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t ~/ HOME; \
+			sudo stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t /etc ETC; \
 		fi; \
 	fi
 	@if [ "$(OS)" = "Darwin" ]; then \

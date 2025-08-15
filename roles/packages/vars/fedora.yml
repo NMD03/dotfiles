@@ -1,0 +1,10 @@
+---
+
+dnf_packages:
+- git
+- tmux
+- jq
+- htop
+- neofetch
+- eza
+- fzf

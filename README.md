@@ -29,6 +29,19 @@ If you only want to install the software you can run the setup.yml using Ansible
 ansible-playbook --ask-become-pass setup.yml
 ```
 
+## Architecture
+
+### install.sh
+
+`install.sh` is the installation script that does the following steps:
+1. run OS-specific installation script that installs packages to enable ansible setup
+2. run ansible roles based on the seutp.yml config
+3. handels directory conflicts that might occur on the running system
+4. runs the makefile that uses stow to create symlinks
+
 ## TODOs
 
 - Add Nvim Mason dependencies to be installed automatically
+
+
+

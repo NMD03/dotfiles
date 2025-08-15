@@ -5,3 +5,8 @@
 - name: Install packages on Arch
   import_tasks: arch.yml
   when: ansible_distribution == "Archlinux"
+
+- name: Install packages on Fedora
+  import_tasks: fedora.yml
+  when: ansible_distribution == "Fedora"
+

@@ -1,0 +1,7 @@
+---
+
+- name: Install KeepassXC on Fedora
+  bacome: yes
+  dnf:
+    name: keepassxc
+    state: present

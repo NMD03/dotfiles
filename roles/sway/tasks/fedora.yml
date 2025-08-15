@@ -1,0 +1,10 @@
+---
+
+- name: Install sway and related packages on Fedora
+  become: yes
+  dnf:
+    name: 
+      - sway 
+      - waybar
+      - swaybg
+    state: present
