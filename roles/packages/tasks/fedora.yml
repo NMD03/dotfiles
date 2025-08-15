@@ -1,10 +1,11 @@
 ---
 
 - name: Include Vars
-  Include_vars: "fedora.yml"
+  include_vars: "fedora.yml"
 
 - name: Install packages on Fedora
   become: yes
   dnf:
     name: "{{ dnf_packages }}"
     state: present
+

@@ -1,7 +1,6 @@
 ---
 
 - name: Install and set zsh as the default shell on Fedora
-  hosts: all
   become: yes
   dnf:
     name: zsh

@@ -1,46 +1,42 @@
 ---
-
-- name: Install Ubuntu Nerd Fonts on Fedora
-  hosts: all
+- name: Ensure dependencies are installed (wget, unzip)
   become: yes
-  tasks:
-    - name: Ensure dependencies are installed (wget, unzip)
-      dnf:
-        name:
-          - wget
-          - unzip
-        state: present
+  dnf:
+    name:
+      - wget
+      - unzip
+    state: present
 
-    - name: Download Ubuntu Nerd Fonts
-      get_url:
-        url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Ubuntu.zip
-        dest: /tmp/ubuntu-nerd-font.zip
+- name: Download Ubuntu Nerd Fonts
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.3.3/Ubuntu.zip
+    dest: /tmp/ubuntu-nerd-font.zip
 
-    - name: Extract Ubuntu Nerd Fonts
-      unarchive:
-        src: /tmp/ubuntu-nerd-font.zip
-        dest: /tmp/
-        remote_src: yes
+- name: Extract Ubuntu Nerd Fonts
+  unarchive:
+    src: /tmp/ubuntu-nerd-font.zip
+    dest: /tmp/
+    remote_src: yes
 
-    - name: Copy the font files to the system fonts directory
-      copy:
-        src: /tmp/Ubuntu\ Nerd\ Fonts/Ubuntu/*.ttf
-        dest: /usr/share/fonts/truetype/nerd-fonts/
-        mode: '0644'
-        remote_src: yes
-        owner: root
-        group: root
+- name: Copy the font files to the system fonts directory
+  become: yes
+  copy:
+    src: "/tmp/Ubuntu Nerd Fonts/Ubuntu/*.ttf"
+    dest: /usr/share/fonts/truetype/nerd-fonts/
+    mode: '0644'
+    owner: root
+    group: root
 
-    - name: Update font cache
-      command: fc-cache -fv
+- name: Update font cache
+  command: fc-cache -fv
 
-    - name: Clean up the downloaded zip file
-      file:
-        path: /tmp/ubuntu-nerd-font.zip
-        state: absent
+- name: Clean up the downloaded zip file
+  file:
+    path: /tmp/ubuntu-nerd-font.zip
+    state: absent
 
-    - name: Clean up extracted Nerd Fonts directory
-      file:
-        path: /tmp/Ubuntu\ Nerd\ Fonts
-        state: absent
+- name: Clean up extracted Nerd Fonts directory
+  file:
+    path: "/tmp/Ubuntu Nerd Fonts"
+    state: absent
 

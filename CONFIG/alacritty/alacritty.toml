@@ -1,12 +1,12 @@
 [font]
-size = 15
+size = 12
 
 [font.normal]
-family = "UbuntuMono Nerd Font"
+#family = "UbuntuMono Nerd Font"
 
 [window]
-decorations = "none"
-opacity = 0.9
+#decorations = "none"
+opacity = 1.0
 blur = true
 
 [window.padding]

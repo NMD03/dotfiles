@@ -5,6 +5,6 @@ dnf_packages:
 - tmux
 - jq
 - htop
-- neofetch
-- eza
+- fastfetch
 - fzf
+- stow
