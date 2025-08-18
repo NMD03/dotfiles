@@ -17,7 +17,7 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # set $menu wmenu-run
-set $menu kickoff
+set $menu ~/.cargo/bin/kickoff
 
 ### Output configuration
 #
@@ -53,6 +53,13 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #       natural_scroll enabled
 #       middle_emulation enabled
 #   }
+    input type:pointer {
+        natural_scroll enabled
+    }
+    input type:touchpad {
+        natural_scroll enabled
+    }
+    
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
