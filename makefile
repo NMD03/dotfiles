@@ -2,19 +2,24 @@
 
 OS := $(shell uname -s)
 DISTRO := $(if $(findstring Linux,$(OS)),$(shell awk -F= '$$1=="NAME" { gsub(/"/, "", $$2); print $$2 }' /etc/os-release))
+ROOT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+XDG_CONFIG_HOME ?= $(HOME)/.config
+
+STOW_RESTOW := stow --verbose --dotfiles --restow
+STOW_DELETE := stow --verbose --dotfiles --delete
 
 all: general $(OS)
 
 general:
-	stow --verbose --dotfiles --restow -d ./ -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./ -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./ -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/ -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/ -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/ -t /etc ETC
 
 # Linux specific configurations
 Linux:
-	stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/Linux -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./OS/Linux -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux -t /etc ETC
 	@if [ "$(DISTRO)" = "Ubuntu" ]; then \
 		echo "Applying Ubuntu-specific configurations..."; \
 		$(MAKE) ubuntu; \
@@ -27,19 +32,19 @@ Linux:
 	fi
 
 ubuntu:
-	stow --verbose --dotfiles --restow -d ./OS/Linux/ubuntu -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/Linux/ubuntu -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./OS/Linux/ubuntu -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/ubuntu -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/ubuntu -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux/ubuntu -t /etc ETC
 
 arch: 
-	stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./OS/Linux/arch -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/arch -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/arch -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux/arch -t /etc ETC
 
 fedora:
-	stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./OS/Linux/fedora -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/fedora -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/OS/Linux/fedora -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux/fedora -t /etc ETC
 
 # MacOS specific configurations
 Darwin:
@@ -47,41 +52,41 @@ Darwin:
 	$(MAKE) macos
 
 macos:
-	stow --verbose --dotfiles --restow -d ./OS/MacOS -t ~/.config CONFIG
-	stow --verbose --dotfiles --restow -d ./OS/MacOS -t ~/ HOME
-	sudo stow --verbose --dotfiles --restow -d ./OS/MacOS -t /etc ETC
+	$(STOW_RESTOW) -d $(ROOT)/OS/MacOS -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_RESTOW) -d $(ROOT)/OS/MacOS -t $(HOME) HOME
+	sudo $(STOW_RESTOW) -d $(ROOT)/OS/MacOS -t /etc ETC
 
 # Delete Operations
 delete:
-	stow --verbose --dotfiles --delete -d ./ -t ~/.config CONFIG
-	stow --verbose --dotfiles --delete -d ./ -t ~/ HOME
-	sudo stow --verbose --dotfiles --delete -d ./ -t /etc ETC
+	$(STOW_DELETE) -d $(ROOT)/ -t $(XDG_CONFIG_HOME) CONFIG
+	$(STOW_DELETE) -d $(ROOT)/ -t $(HOME) HOME
+	sudo $(STOW_DELETE) -d $(ROOT)/ -t /etc ETC
 	@if [ "$(OS)" = "Linux" ]; then \
 		echo "Removing Linux specific configurations..."; \
-		stow --verbose --dotfiles --delete -d ./OS/Linux -t ~/.config CONFIG; \
-		stow --verbose --dotfiles --delete -d ./OS/Linux -t ~/ HOME; \
-		sudo stow --verbose --dotfiles --delete -d ./OS/Linux -t /etc ETC; \
+		$(STOW_DELETE) -d $(ROOT)/OS/Linux -t $(XDG_CONFIG_HOME) CONFIG; \
+		$(STOW_DELETE) -d $(ROOT)/OS/Linux -t $(HOME) HOME; \
+		sudo $(STOW_DELETE) -d $(ROOT)/OS/Linux -t /etc ETC; \
 		if [ "$(DISTRO)" = "Ubuntu" ]; then \
 			echo "Removing Ubuntu-specific configurations..."; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/ubuntu -t ~/.config CONFIG; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/ubuntu -t ~/ HOME; \
-			sudo stow --verbose --dotfiles --delete -d ./OS/Linux/ubuntu -t /etc ETC; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/ubuntu -t $(XDG_CONFIG_HOME) CONFIG; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/ubuntu -t $(HOME) HOME; \
+			sudo $(STOW_DELETE) -d $(ROOT)/OS/Linux/ubuntu -t /etc ETC; \
 		elif [ "$(DISTRO)" = "Arch Linux" ]; then \
 			echo "Removing Arch-specific configurations..."; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t ~/.config CONFIG; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t ~/ HOME; \
-			sudo stow --verbose --dotfiles --delete -d ./OS/Linux/arch -t /etc ETC; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/arch -t $(XDG_CONFIG_HOME) CONFIG; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/arch -t $(HOME) HOME; \
+			sudo $(STOW_DELETE) -d $(ROOT)/OS/Linux/arch -t /etc ETC; \
 		elif [ "$(DISTRO)" = "Fedora Linux" ]; then \
 			echo "Removing Fedora-specific configurations..."; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t ~/.config CONFIG; \
-			stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t ~/ HOME; \
-			sudo stow --verbose --dotfiles --delete -d ./OS/Linux/fedora -t /etc ETC; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/fedora -t $(XDG_CONFIG_HOME) CONFIG; \
+			$(STOW_DELETE) -d $(ROOT)/OS/Linux/fedora -t $(HOME) HOME; \
+			sudo $(STOW_DELETE) -d $(ROOT)/OS/Linux/fedora -t /etc ETC; \
 		fi; \
 	fi
 	@if [ "$(OS)" = "Darwin" ]; then \
 		echo "Removing MacOS specific configurations..."; \
-		stow --verbose --dotfiles --delete -d ./OS/MacOS -t ~/.config CONFIG; \
-		stow --verbose --dotfiles --delete -d ./OS/MacOS -t ~/ HOME; \
-		sudo stow --verbose --dotfiles --delete -d ./OS/MacOS -t /etc ETC; \
+		$(STOW_DELETE) -d $(ROOT)/OS/MacOS -t $(XDG_CONFIG_HOME) CONFIG; \
+		$(STOW_DELETE) -d $(ROOT)/OS/MacOS -t $(HOME) HOME; \
+		sudo $(STOW_DELETE) -d $(ROOT)/OS/MacOS -t /etc ETC; \
 	fi
 
