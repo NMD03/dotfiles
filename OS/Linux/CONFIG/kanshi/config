@@ -1,0 +1,14 @@
+# Dell above laptop (centered)
+profile docked-dell-above {
+  # Top screen (Dell)
+  output "Dell Inc. DELL P3425WE BF7SY54" enable mode 3440x1440@59.973Hz position 0,0
+
+  # Bottom screen (laptop), centered under 3440px:
+  # x = (3440 - 1920) / 2 = 760, y = 1440
+  output eDP-1 enable mode 1920x1200@60.003Hz position 760,1440
+}
+
+# Laptop only
+profile mobile {
+  output eDP-1 enable mode 1920x1200@60.003Hz position 0,0
+}
