@@ -42,6 +42,7 @@ ansible-playbook --ask-become-pass setup.yml
 ## TODOs
 
 - Add Nvim Mason dependencies to be installed automatically
+- Add kickoff installation for Linux
 
 
 

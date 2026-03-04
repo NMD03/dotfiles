@@ -13,4 +13,4 @@ apt_packages:
 - fzf
 - thefuck
 - zsh-autosuggestions
-
+- kanshi

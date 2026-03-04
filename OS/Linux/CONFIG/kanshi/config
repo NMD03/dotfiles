@@ -1,14 +1,52 @@
-# Dell above laptop (centered)
-profile docked-dell-above {
-  # Top screen (Dell)
-  output "Dell Inc. DELL P3425WE BF7SY54" enable mode 3440x1440@59.973Hz position 0,0
+# Work setup
+profile work {
+    # Top screen (Dell)
+    output "Dell Inc. DELL P3425WE BF7SY54" enable mode 3440x1440@59.973Hz position 0,0
 
-  # Bottom screen (laptop), centered under 3440px:
-  # x = (3440 - 1920) / 2 = 760, y = 1440
-  output eDP-1 enable mode 1920x1200@60.003Hz position 760,1440
+    # Bottom screen (laptop), centered under 3440px:
+    # x = (3440 - 1920) / 2 = 760, y = 1440
+    output eDP-1 enable mode 1920x1200@60.003Hz position 760,1440
+
+    # Create workspaces
+    exec swaymsg workspace "1:term", move workspace to '"Dell Inc. DELL P3425WE BF7SY54"'
+    exec swaymsg workspace "10:passwd", move workspace to '"Dell Inc. DELL P3425WE BF7SY54"'
+    exec swaymsg workspace "2:web", move workspace to 'eDP-1'
+    exec swaymsg workspace "3:chat", move workspace to 'eDP-1'
+
+    # Launch Apps
+    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty"'
+    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox"'
+    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop"'
+    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc"'
+
+    # Set Focus
+    exec swaymsg 'workspace "2:web"'
+    exec swaymsg 'workspace "1:term"'
+}
+
+# Home
+profile home {
+    output "LG Electronics LG HDR 4K 107NTGYAD943" enable mode 3840x2160@59.997Hz scale 1.25 position 0,0
+    output "LG Electronics LG HDR 4K 0x0003BC76" enable mode 3840x2160@59.997Hz scale 1.25 position 3072,0
+    output eDP-1 disable
+
+    exec swaymsg workspace "1:term", move workspace to '"LG Electronics LG HDR 4K 107NTGYAD943"'
+    exec swaymsg workspace "10:passwd", move workspace to '"LG Electronics LG HDR 4K 107NTGYAD943"'
+    exec swaymsg workspace "2:web", move workspace to '"LG Electronics LG HDR 4K 0x0003BC76"'
+    exec swaymsg workspace "3:chat", move workspace to '"LG Electronics LG HDR 4K 0x0003BC76"'
+
+    # Launch Apps
+    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty"'
+    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox"'
+    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop"'
+    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc"' 
+
+    # Set Focus
+    exec swaymsg 'workspace "2:web"'
+    exec swaymsg 'workspace "1:term"'
 }
 
 # Laptop only
 profile mobile {
-  output eDP-1 enable mode 1920x1200@60.003Hz position 0,0
+    output eDP-1 enable mode 1920x1200@60.003Hz position 0,0
 }

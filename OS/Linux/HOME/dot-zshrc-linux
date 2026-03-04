@@ -15,4 +15,10 @@ export PATH="${JAVA}:${GOPATH}:${LOCAL_BIN}:$PATH"
 # --- Linux-specific Autosuggestions ---
 source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-
+# Sway
+swaymsg() {
+  if [ -z "$SWAYSOCK" ] && [ -n "$XDG_RUNTIME_DIR" ] && pgrep -x sway >/dev/null; then
+    export SWAYSOCK="$XDG_RUNTIME_DIR/sway-ipc.$(id -u).$(pgrep -xo sway).sock"
+  fi
+  command swaymsg "$@"
+}
