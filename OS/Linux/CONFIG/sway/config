@@ -17,7 +17,6 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # set $menu wmenu-run
-set $menu ~/.cargo/bin/kickoff
 set $menu ~/.cargo/bin/kickoff --from-path --from-file ~/.config/kickoff/commands --history ~/.cache/kickoff/default.csv
 
 
