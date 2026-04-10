@@ -43,6 +43,8 @@ ansible-playbook --ask-become-pass setup.yml
 
 - Add Nvim Mason dependencies to be installed automatically
 - Add kickoff installation for Linux
+- Add cargo installtion for linux
+- Add sway installation for ubuntu
 
 
 
