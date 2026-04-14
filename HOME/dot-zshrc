@@ -31,6 +31,8 @@ function update_prompt {
     local pyenv=""
     if [[ -n "$VIRTUAL_ENV" ]]; then
         pyenv="%{$fg[magenta]%}(`basename "$VIRTUAL_ENV"`)%{$reset_color%} "
+    elif [[ -n "$CONDA_DEFAULT_ENV" ]]; then
+        pyenv="%{$fg[magenta]%}($CONDA_DEFAULT_ENV)%{$reset_color%} "
     fi
 
     if [[ -n "$SSH_CONNECTION" ]]; then
