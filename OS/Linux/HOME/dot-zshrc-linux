@@ -22,3 +22,14 @@ swaymsg() {
   fi
   command swaymsg "$@"
 }
+
+# Lazy-load conda only on first use
+__load_conda() {
+    unfunction conda 2>/dev/null
+    source /home/niclas/miniconda3/etc/profile.d/conda.sh
+}
+
+conda() {
+    __load_conda
+    conda "$@"
+}
