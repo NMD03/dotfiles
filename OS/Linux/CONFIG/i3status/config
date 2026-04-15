@@ -1,0 +1,29 @@
+general {
+    colors = true
+    color_good = "#ffffff"
+    color_bad = "#ff5555"
+    color_degraded = "#ffff00"
+    interval = 5
+}
+
+order += "wireless _first_"
+order += "battery all"
+order += "tztime local"
+
+wireless _first_ {
+    format_up = "WiFi: %essid %quality %ip"
+    format_down = "WiFi: down"
+}
+
+battery all {
+    format = "%status %percentage"
+    format_down = "Bat: no battery"
+    status_chr = "⚡"
+    status_bat = "🗲"
+    status_full = "FULL"
+    status_unk = "?"
+}
+
+tztime local {
+    format = "%Y-%m-%d %H:%M"
+}
