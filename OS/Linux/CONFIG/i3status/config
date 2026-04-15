@@ -1,11 +1,13 @@
 general {
     colors = true
     color_good = "#ffffff"
-    color_bad = "#ff5555"
-    color_degraded = "#ffff00"
+    color_bad = "#ff6961"
+    color_degraded = "#ffc067"
     interval = 5
 }
 
+order += "cpu_usage"
+order += "memory"
 order += "wireless _first_"
 order += "battery all"
 order += "tztime local"
@@ -18,10 +20,27 @@ wireless _first_ {
 battery all {
     format = "%status %percentage"
     format_down = "Bat: no battery"
+    low_threshold = 20
+    threshold_type = "percentage"
     status_chr = "⚡"
     status_bat = "🗲"
     status_full = "FULL"
     status_unk = "?"
+}
+
+cpu_usage {
+    format = "CPU: %usage"
+    degraded_threshold = 50
+    max_threshold = 80
+    format_above_degraded_threshold = "CPU: %usage"
+    format_above_threshold = "CPU: %usage"
+}
+
+memory {
+    memory_used_method = "memavailable"
+    format = "RAM: %used/%total/"
+    threshold_degraded = "20%"
+    threshold_critical = "10%"
 }
 
 tztime local {
