@@ -14,3 +14,5 @@ apt_packages:
 - thefuck
 - zsh-autosuggestions
 - kanshi
+- brightnessctl
+- pulseaudio-utils
