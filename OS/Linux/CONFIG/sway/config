@@ -244,6 +244,7 @@ exec_always swayidle -w \
 
 # Custom Keybindings
 bindsym $mod+Ctrl+l exec swaylock --config ~/.config/swaylock/config
+bindsym --locked $mod+Shift+n exec sh -c 'if [ "$(dunstctl get-pause-level)" = "0" ]; then dunstify -a sway-system "Notifications" "Disabled" -t 1500; dunstctl set-pause-level 100; else dunstctl set-pause-level 0; dunstify -a sway-system "Notifications" "Enabled" -t 1500; fi'
 
 # Custom Settings
 for_window [class=".*"] border none

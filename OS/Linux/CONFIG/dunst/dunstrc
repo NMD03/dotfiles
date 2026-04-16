@@ -1,0 +1,9 @@
+[global]
+notification_limit = 5
+gap_size = 8
+frame_width = 2
+
+[allow-sway-system]
+appname = sway-system
+override_pause_level = 100
+

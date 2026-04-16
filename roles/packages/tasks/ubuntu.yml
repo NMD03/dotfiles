@@ -15,3 +15,11 @@
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   args:
     creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+
+- name: Install Rust packages
+  community.general.cargo:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ cargo_packages }}"
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"

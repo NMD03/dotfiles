@@ -16,3 +16,7 @@ apt_packages:
 - kanshi
 - brightnessctl
 - pulseaudio-utils
+
+cargo_packages:
+- bluetui
+- kickoff

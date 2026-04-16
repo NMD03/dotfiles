@@ -24,20 +24,28 @@ esac
 if [ "$action" = "micmute" ]; then
   if wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q MUTED; then
     dunstify "Microphone" "Muted" \
-      -h string:x-dunst-stack-tag:mic
+      -h string:x-dunst-stack-tag:mic \
+      -t 1500 \
+      -a sway-system
   else
     dunstify "Microphone" "Unmuted" \
-      -h string:x-dunst-stack-tag:mic
+      -h string:x-dunst-stack-tag:mic \
+      -t 1500 \
+      -a sway-system
   fi
   exit 0
 fi
 
 if wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q MUTED; then
   dunstify "Volume" "Muted" \
-    -h string:x-dunst-stack-tag:volume
+    -h string:x-dunst-stack-tag:volume \
+    -t 1500 \
+    -a sway-system
 else
   v="$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%d", $2*100}')"
   dunstify "Volume" "${v}%" \
     -h int:value:"$v" \
-    -h string:x-dunst-stack-tag:volume
+    -h string:x-dunst-stack-tag:volume \
+    -t 1500 \
+    -a sway-system
 fi
