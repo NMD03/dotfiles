@@ -9,12 +9,18 @@ general {
 order += "cpu_usage"
 order += "memory"
 order += "wireless _first_"
+order += "ethernet _first_"
 order += "battery all"
 order += "tztime local"
 
 wireless _first_ {
     format_up = "WiFi: %essid %quality %ip"
     format_down = "WiFi: down"
+}
+
+ethernet _first_ {
+    format_up = "Ethernet: %ip"
+    format_down = ""
 }
 
 battery all {
