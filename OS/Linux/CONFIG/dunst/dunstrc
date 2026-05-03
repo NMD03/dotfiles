@@ -6,4 +6,5 @@ frame_width = 2
 [allow-sway-system]
 appname = sway-system
 override_pause_level = 100
+highlight = "#d3d3d3"
 
