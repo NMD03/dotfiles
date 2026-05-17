@@ -29,10 +29,25 @@ set $ws3 "3:chat"
 set $ws10 "10:passwd"
 
 # Assign apps to worksapces
-assign [app_id="Alacritty"] workspace $ws1
-assign [app_id="firefox_firefox"] workspace $ws2
-assign [app_id="Element"] workspace $ws3
-assign [app_id="org.keepassxc.KeePassXC"] workspace $ws10
+# Output names
+set $work_dell "Dell Inc. DELL P3425WE BF7SY54"
+set $home_left "LG Electronics LG HDR 4K 107NTGYAD943"
+set $home_right "LG Electronics LG HDR 4K 0x0003BC76"
+set $laptop eDP-1
+
+# Workspace output preferences
+# Sway uses the first currently available output.
+workspace $ws1 output $work_dell $home_left $laptop
+workspace $ws10 output $work_dell $home_right $laptop
+
+workspace $ws2 output $home_right $laptop
+workspace $ws3 output $home_right $laptop
+
+# App placement rules
+for_window [app_id="alacritty"] move to workspace $ws1
+for_window [app_id="firefox"] move to workspace $ws2
+for_window [app_id="element-desktop"] move to workspace $ws3
+for_window [app_id="org.keepassxc.KeePassXC"] move to workspace $ws10
 
 ### Output configuration
 #
@@ -236,7 +251,7 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86MonBrightnessDown exec sh -c 'brightnessctl set 5%- && p=$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) && dunstify "Brightness" "$p%" -h int:value:$p -h string:x-dunst-stack-tag:brightness -a sway-system -t 1500'
     bindsym --locked XF86MonBrightnessUp  exec sh -c 'brightnessctl set +5% && p=$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) && dunstify "Brightness" "$p%" -h int:value:$p -h string:x-dunst-stack-tag:brightness -a sway-system -t 1500'
     # Special key to take a screenshot with grim
-    bindsym Print exec grim
+    bindsym $mod+Shift+s exec sh -c 'grim -g "$(slurp)" - | wl-copy -t image/png'
 
 #
 # For the Lols:
@@ -281,6 +296,7 @@ bar {
 }
 
 # Load custom screen setups 
-exec_always kanshi -c ~/.config/kanshi/config
+# exec_always kanshi -c ~/.config/kanshi/config
+exec_always sh -c 'pkill -x kanshi; exec kanshi -c ~/.config/kanshi/config'
 
 include /etc/sway/config.d/*

@@ -7,17 +7,11 @@ profile work {
     # x = (3440 - 1920) / 2 = 760, y = 1440
     output eDP-1 enable mode 1920x1200@60.003Hz position 760,1440 scale 1
 
-    # Create workspaces
-    exec swaymsg workspace "1:term", move workspace to '"Dell Inc. DELL P3425WE BF7SY54"'
-    exec swaymsg workspace "10:passwd", move workspace to '"Dell Inc. DELL P3425WE BF7SY54"'
-    exec swaymsg workspace "2:web", move workspace to 'eDP-1'
-    exec swaymsg workspace "3:chat", move workspace to 'eDP-1'
-
     # Launch Apps
-    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty"'
-    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox"'
-    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop"'
-    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc"'
+    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty'
+    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox'
+    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop'
+    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc'
 
     # Set Focus
     exec swaymsg 'workspace "2:web"'
@@ -30,16 +24,11 @@ profile home {
     output "LG Electronics LG HDR 4K 0x0003BC76" enable mode 3840x2160@59.997Hz scale 1.25 position 3072,0
     output eDP-1 disable
 
-    exec swaymsg workspace "1:term", move workspace to '"LG Electronics LG HDR 4K 107NTGYAD943"'
-    exec swaymsg workspace "10:passwd", move workspace to '"LG Electronics LG HDR 4K 107NTGYAD943"'
-    exec swaymsg workspace "2:web", move workspace to '"LG Electronics LG HDR 4K 0x0003BC76"'
-    exec swaymsg workspace "3:chat", move workspace to '"LG Electronics LG HDR 4K 0x0003BC76"'
-
     # Launch Apps
-    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty"'
-    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox"'
-    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop"'
-    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc"' 
+    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty'
+    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox'
+    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop'
+    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc' 
 
     # Set Focus
     exec swaymsg 'workspace "2:web"'
@@ -48,5 +37,7 @@ profile home {
 
 # Laptop only
 profile mobile {
-    output eDP-1 enable mode 1920x1200@60.003Hz position 0,0
+    output eDP-1 enable mode 1920x1200@60.003Hz position 0,0 scale 1
+
+    exec sh -c 'sleep 0.5; swaymsg "output eDP-1 enable position 0,0 scale 1"; swaymsg -t get_workspaces | jq -r ".[].name" | while IFS= read -r ws; do swaymsg "workspace \"$ws\""; swaymsg "move workspace to output eDP-1"; done; for ws in "1:term" "2:web" "3:chat" "10:passwd"; do swaymsg "workspace \"$ws\""; swaymsg "move workspace to output eDP-1"; done; swaymsg "workspace \"1:term\""; swaymsg "seat seat0 cursor set 960 600"'
 }

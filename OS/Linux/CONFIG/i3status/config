@@ -6,12 +6,21 @@ general {
     interval = 5
 }
 
+order += "path_exists wg_home"
 order += "cpu_usage"
 order += "memory"
 order += "wireless _first_"
 order += "ethernet _first_"
 order += "battery all"
 order += "tztime local"
+
+path_exists wg_home {
+    path = "/sys/class/net/home"
+    format = "WG: work"
+    format_down = ""
+
+    color_good = "#b5c7eb"
+}
 
 wireless _first_ {
     format_up = "WiFi: %essid %quality %ip"
@@ -21,6 +30,8 @@ wireless _first_ {
 ethernet _first_ {
     format_up = "Ethernet: %ip"
     format_down = ""
+
+    color_good = "#b5c7eb"
 }
 
 battery all {
