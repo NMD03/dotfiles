@@ -33,3 +33,14 @@ conda() {
     __load_conda
     conda "$@"
 }
+
+# use WPS to connect to wifi
+wps() {
+    iface="${1:-wlp0s20f3}"
+    echo "Press the WPS button on the router now..."
+    sleep 3
+    sudo wpa_cli -i "$iface" wps_pbc
+    echo
+    echo "Waiting for connection..."
+    watch -n 1 "nmcli device status; echo; wpa_cli -i '$iface' status 2>/dev/null | grep -E 'wpa_state|ssid|ip_address'"
+}

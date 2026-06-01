@@ -26,6 +26,7 @@ set $menu ~/.cargo/bin/kickoff --from-path --from-file ~/.config/kickoff/command
 set $ws1 "1:term"
 set $ws2 "2:web"
 set $ws3 "3:chat"
+set $ws4 "4:email"
 set $ws10 "10:passwd"
 
 # Assign apps to worksapces
@@ -38,15 +39,16 @@ set $laptop eDP-1
 # Workspace output preferences
 # Sway uses the first currently available output.
 workspace $ws1 output $work_dell $home_left $laptop
-workspace $ws10 output $work_dell $home_right $laptop
-
+workspace $ws10 output $home_right $laptop
 workspace $ws2 output $home_right $laptop
 workspace $ws3 output $home_right $laptop
+workspace $ws4 output $laptop
 
 # App placement rules
 for_window [app_id="alacritty"] move to workspace $ws1
 for_window [app_id="firefox"] move to workspace $ws2
 for_window [app_id="element-desktop"] move to workspace $ws3
+for_window [app_id="thunderbird"] move to worksapce $ws4
 for_window [app_id="org.keepassxc.KeePassXC"] move to workspace $ws10
 
 ### Output configuration
@@ -54,36 +56,10 @@ for_window [app_id="org.keepassxc.KeePassXC"] move to workspace $ws10
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 output * bg /home/niclas/wallpaper/bsod_parody.jpg fill
-#
-# Example configuration:
-#
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
-# You can get the names of your outputs by running: swaymsg -t get_outputs
-
-### Idle configuration
-#
-# Example configuration:
-#
-# exec swayidle -w \
-#          timeout 300 'swaylock -f -c 000000' \
-#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-#          before-sleep 'swaylock -f -c 000000'
-#
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
 
 ### Input configuration
 #
-# Example configuration:
 #
-#   input "2:14:SynPS/2_Synaptics_TouchPad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
     input type:pointer {
         natural_scroll disabled
     }
@@ -271,12 +247,6 @@ bindsym --locked $mod+Shift+n exec sh -c 'if [ "$(dunstctl get-pause-level)" = "
 for_window [class=".*"] border none
 
 # Using custom Bar:
-#bar swaybar_command waybar
-
-# Default Bar
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
 
