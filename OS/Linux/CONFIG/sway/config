@@ -48,7 +48,7 @@ workspace $ws4 output $laptop
 for_window [app_id="alacritty"] move to workspace $ws1
 for_window [app_id="firefox"] move to workspace $ws2
 for_window [app_id="element-desktop"] move to workspace $ws3
-for_window [app_id="thunderbird"] move to worksapce $ws4
+for_window [app_id="thunderbird"] move to workspace $ws4
 for_window [app_id="org.keepassxc.KeePassXC"] move to workspace $ws10
 
 ### Output configuration
@@ -249,6 +249,7 @@ for_window [class=".*"] border none
 # Using custom Bar:
 bar {
     position top
+    font pango:UbuntuMono Nerd Font
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
