@@ -19,7 +19,7 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # set $menu wmenu-run
-set $menu ~/.cargo/bin/kickoff --from-path --from-file ~/.config/kickoff/commands --history ~/.cache/kickoff/default.csv
+set $menu kickoff --from-path --from-file ~/.config/kickoff/commands --history ~/.cache/kickoff/default.csv
 
 
 # Custom Workspace Layout on Login
