@@ -29,16 +29,24 @@ autoload -Uz vcs_info
 # --- Prompt Update Function ---
 function update_prompt {
     local pyenv=""
+    local box=""
+
     if [[ -n "$VIRTUAL_ENV" ]]; then
         pyenv="%{$fg[magenta]%}(`basename "$VIRTUAL_ENV"`)%{$reset_color%} "
     elif [[ -n "$CONDA_DEFAULT_ENV" ]]; then
         pyenv="%{$fg[magenta]%}($CONDA_DEFAULT_ENV)%{$reset_color%} "
     fi
 
+    if [[ -n "$CONTAINER_ID" ]]; then
+        box="%{$fg[blue]%}($CONTAINER_ID)%{$reset_color%} "
+    elif [[ -f /run/.containerenv ]]; then
+        box="%{$fg[blue]%}(container)%{$reset_color%} "
+    fi
+
     if [[ -n "$SSH_CONNECTION" ]]; then
-        PROMPT="%{$fg[red]%}[%m]%{$reset_color%} ${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="%{$fg[red]%}[%m]%{$reset_color%} ${box}${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
     else
-        PROMPT="%{$fg[yellow]%}→  ${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
+        PROMPT="%{$fg[yellow]%}→  ${box}${pyenv}%{$fg[yellow]%}%1~$vcs_info_msg_0_ %{$reset_color%}%% "
     fi
 }
 
