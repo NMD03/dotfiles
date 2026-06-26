@@ -40,5 +40,10 @@ profile home {
 profile mobile {
     output eDP-1 enable mode 1920x1200@60.003Hz position 0,0 scale 1
 
-    # exec sh -c 'sleep 0.5; swaymsg "output eDP-1 enable position 0,0 scale 1"; swaymsg "workspace \"1:term\""; swaymsg "seat seat0 cursor set 960 600"
+    exec sh -c 'sleep 0.5; swaymsg "output eDP-1 enable position 0,0 scale 1"; swaymsg "workspace \"1:term\""; swaymsg "seat seat0 cursor set 960 600"
+    exec sh -c 'pgrep -x alacritty >/dev/null || exec alacritty'
+    exec sh -c 'pgrep -x firefox   >/dev/null || exec firefox'
+    exec sh -c 'pgrep -x element-desktop >/dev/null || exec element-desktop'
+    exec sh -c 'pgrep -x keepassxc >/dev/null || exec keepassxc'
+    exec swaymsg 'workspace "1:term"'
 }

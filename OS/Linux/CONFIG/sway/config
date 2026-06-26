@@ -19,7 +19,7 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 # set $menu wmenu-run
-set $menu kickoff --from-path --from-file ~/.config/kickoff/commands --history ~/.cache/kickoff/default.csv
+set $menu env PATH=$HOME/.cargo/bin:/usr/bin:/var/lib/flatpak/exports/bin:$HOME/.local/share/flatpak/exports/bin kickoff --from-path --from-file ~/.config/kickoff/commands --history ~/.cache/kickoff/default.csv
 
 
 # Custom Workspace Layout on Login

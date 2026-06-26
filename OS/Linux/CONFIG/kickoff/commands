@@ -1,1 +1,2 @@
 tor browser = gtk-launch start-tor-browser.desktop
+Element = flatpak run im.riot.Riot
