@@ -1,49 +1,47 @@
-ignore-empty-password
-font=Ubuntu
+# Background color
+color=#191724
+image=/home/niclas/wallpaper/pleiades.png
+scaling=fill
 
-clock
-timestr=%R
-datestr=%a, %e of %B
+# Layout text colors
+layout-bg-color=#00000000
+layout-border-color=#00000000
+layout-text-color=#e0def4
 
-screenshots
+# Text color
+text-color=#31748f
+text-clear-color=#9ccfd8
+text-caps-lock-color=#f6c177
+text-ver-color=#c4a7e7
+text-wrong-color=#eb6f92
 
-effect-blur=20x2
-effect-greyscale
-effect-scale=0.3
+# Highlight segments
+bs-hl-color=#19172466
+key-hl-color=#31748f
+caps-lock-bs-hl-color=#19172466
+caps-lock-key-hl-color=#f6c177
 
-indicator
-indicator-radius=240
-indicator-thickness=20
-indicator-caps-lock
+# Highlight segments separator
+separator-color=#00000000
 
-key-hl-color=ffffffff
+# Inside of the indicator
+inside-color=#31748f55
+inside-clear-color=#9ccfd855
+inside-caps-lock-color=#f6c17755
+inside-ver-color=#c4a7e755
+inside-wrong-color=#eb6f9255
 
-separator-color=00000000
+# Line between the inside and ring
+line-color=#31748f11
+line-clear-color=#9ccfd811
+line-caps-lock-color=#f6c17711
+line-ver-color=#c4a7e711
+line-wrong-color=#eb6f9211
 
-inside-color=000000
-inside-clear-color=ffd20400
-inside-caps-lock-color=009ddc00
-inside-ver-color=d9d8d800
-inside-wrong-color=ee2e2400
+# Indicator ring
+ring-color=#31748faa
+ring-clear-color=#9ccfd8aa
+ring-caps-lock-color=#f6c177aa
+ring-ver-color=#c4a7e7aa
+ring-wrong-color=#eb6f92aa
 
-ring-color=231f20D9
-ring-clear-color=231f20D9
-ring-caps-lock-color=231f20D9
-ring-ver-color=231f20D9
-ring-wrong-color=231f20D9
-
-line-color=00000000
-line-clear-color=ffd204FF
-line-caps-lock-color=009ddcFF
-line-ver-color=d9d8d8FF
-line-wrong-color=ee2e24FF
-
-text-clear-color=ffd20400
-text-ver-color=d9d8d800
-text-wrong-color=ee2e2400
-
-bs-hl-color=ee2e24FF
-caps-lock-key-hl-color=ffd204FF
-caps-lock-bs-hl-color=ee2e24FF
-disable-caps-lock-text
-text-caps-lock-color=009ddc
