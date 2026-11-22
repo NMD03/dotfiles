@@ -47,9 +47,13 @@ workspace $ws4 output $laptop
 # App placement rules
 for_window [app_id="alacritty"] move to workspace $ws1
 for_window [app_id="firefox"] move to workspace $ws2
-for_window [app_id="element-desktop"] move to workspace $ws3
-for_window [app_id="thunderbird"] move to workspace $ws4
-for_window [app_id="org.keepassxc.KeePassXC"] move to workspace $ws10
+# Flatpak/Electron apps: match Wayland app_id or X11 class, case-insensitive
+for_window [app_id="(?i)element"] move to workspace $ws3
+for_window [class="(?i)element"] move to workspace $ws3
+for_window [app_id="(?i)thunderbird"] move to workspace $ws4
+for_window [class="(?i)thunderbird"] move to workspace $ws4
+for_window [app_id="(?i)bitwarden"] move to workspace $ws10
+for_window [class="(?i)bitwarden"] move to workspace $ws10
 
 ### Output configuration
 #
@@ -243,8 +247,18 @@ exec_always swayidle -w \
 # Custom Keybindings
 bindsym $mod+Ctrl+l exec swaylock --config ~/.config/swaylock/config
 bindsym --locked $mod+Shift+n exec sh -c 'if [ "$(dunstctl get-pause-level)" = "0" ]; then dunstify -a sway-system "Notifications" "Disabled" -t 1500; dunstctl set-pause-level 100; else dunstctl set-pause-level 0; dunstify -a sway-system "Notifications" "Enabled" -t 1500; fi'
+
+# Monitors (see doc/monitors.md in the pleiades repo)
+bindsym $mod+Shift+p exec pleiades-mirror
 bindsym $mod+Shift+m move container to output next
-bindsym $mod+Shift+p exec sway-mirror eDP-1
+bindsym $mod+Ctrl+Left focus output left
+bindsym $mod+Ctrl+Right focus output right
+bindsym $mod+Ctrl+Up focus output up
+bindsym $mod+Ctrl+Down focus output down
+bindsym $mod+Ctrl+Shift+Left move workspace to output left
+bindsym $mod+Ctrl+Shift+Right move workspace to output right
+bindsym $mod+Ctrl+Shift+Up move workspace to output up
+bindsym $mod+Ctrl+Shift+Down move workspace to output down
 
 # Custom Settings
 for_window [class=".*"] border none
@@ -273,6 +287,8 @@ bar {
 exec alacritty
 exec firefox
 exec flatpak run im.riot.Riot --password-store=gnome-libsecret
+exec flatpak run org.mozilla.Thunderbird
+exec flatpak run com.bitwarden.desktop
 # Focus $ws1 once the apps are placed
 exec sh -c 'sleep 1; swaymsg workspace 1:term'
 
