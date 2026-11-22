@@ -61,7 +61,7 @@ for_window [class="(?i)bitwarden"] move to workspace $ws10
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 # output * bg /home/niclas/wallpaper/bsod_parody.jpg fill
-output * bg /home/niclas/wallpaper/pleiades.png fill
+output * bg /home/niclas/wallpaper/pleiades_comic_5120x2160.png fill
 
 ### Input configuration
 #
