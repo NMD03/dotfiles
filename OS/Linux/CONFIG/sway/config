@@ -45,8 +45,8 @@ workspace $ws3 output $home_right $laptop
 workspace $ws4 output $laptop
 
 # App placement rules
-for_window [app_id="alacritty"] move to workspace $ws1
-for_window [app_id="firefox"] move to workspace $ws2
+for_window [app_id="(?i)alacritty"] move to workspace $ws1
+for_window [app_id="(?i)firefox"] move to workspace $ws2
 # Flatpak/Electron apps: match Wayland app_id or X11 class, case-insensitive
 for_window [app_id="(?i)element"] move to workspace $ws3
 for_window [class="(?i)element"] move to workspace $ws3
