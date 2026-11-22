@@ -4,10 +4,7 @@
     name:
       - sway
       - swaybg
+      - swayidle
       - waybar
+      - gtklock   # lock screen, styled by ~/.config/gtklock/style.css
     state: present
-
-- name: Install swaylock-effects-git using yay
-  become: no
-  command: yay -S --noconfirm swaylock-effects-git
-

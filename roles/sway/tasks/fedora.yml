@@ -3,8 +3,10 @@
 - name: Install sway and related packages on Fedora
   become: yes
   dnf:
-    name: 
-      - sway 
+    name:
+      - sway
       - waybar
       - swaybg
+      - swayidle
+      - gtklock   # lock screen, styled by ~/.config/gtklock/style.css
     state: present

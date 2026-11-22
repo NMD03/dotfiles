@@ -1,0 +1,38 @@
+/* Lock screen: styled like tuigreet (black, monospace, framed box).
+   Installed to ~/.config/gtklock/style.css; gtklock loads it automatically. */
+window {
+  background: #000000;
+  font-family: "UbuntuMono Nerd Font Mono", monospace;
+  font-size: 16px;
+  color: #e0def4;
+}
+#window-box {
+  border: 1px solid #e0def4;
+  border-radius: 0;
+  padding: 16px 32px;
+  background: #000000;
+}
+#time-box, #info-box, #message-box { background: transparent; }
+#clock-label, #date-label {
+  font-size: 16px;
+  font-weight: normal;
+  color: #e0def4;
+}
+#input-label { color: #9ccfd8; }
+#input-field, entry {
+  background: #000000;
+  color: #e0def4;
+  border: 1px solid #6e6a86;
+  border-radius: 0;
+  box-shadow: none;
+  caret-color: #e0def4;
+}
+#unlock-button, button {
+  background: #000000;
+  color: #e0def4;
+  border: 1px solid #6e6a86;
+  border-radius: 0;
+  box-shadow: none;
+}
+#error-label   { color: #eb6f92; }
+#warning-label { color: #f6c177; }
