@@ -50,6 +50,7 @@ for_window [app_id="(?i)firefox"] move to workspace $ws2
 # Flatpak/Electron apps: match Wayland app_id or X11 class, case-insensitive
 for_window [app_id="(?i)element"] move to workspace $ws3
 for_window [class="(?i)element"] move to workspace $ws3
+for_window [app_id="im\.riot\.Riot"] move to workspace $ws3
 for_window [app_id="(?i)thunderbird"] move to workspace $ws4
 for_window [class="(?i)thunderbird"] move to workspace $ws4
 for_window [app_id="(?i)bitwarden"] move to workspace $ws10
@@ -286,7 +287,8 @@ bar {
 # Autostart apps once at login (for_window rules above place them on their workspaces)
 exec alacritty
 exec firefox
-exec flatpak run im.riot.Riot --password-store=gnome-libsecret
+# Element fails if started before the keyring/portal are ready
+exec sh -c 'sleep 5; exec flatpak run im.riot.Riot --password-store=gnome-libsecret'
 exec flatpak run org.mozilla.Thunderbird
 exec flatpak run com.bitwarden.desktop
 # Focus $ws1 once the apps are placed
