@@ -1,7 +1,7 @@
 # ~/.zshrc-linux
 
 # --- Linux-specific Environment Variables ---
-export GOPATH="$HOME/go/bin/"
+export GOPATH="$HOME/go/bin/:/usr/local/go/bin"
 #export JAVA_HOME="/opt/amazon-corretto-11.0.26.4.1-linux-x64"
 #export JAVA="$JAVA_HOME/bin"
 export LOCAL_BIN="/home/niclas/.local/bin" 

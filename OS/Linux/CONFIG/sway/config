@@ -135,7 +135,7 @@ input * {
     bindsym $mod+1 workspace $ws1
     bindsym $mod+2 workspace $ws2
     bindsym $mod+3 workspace $ws3
-    bindsym $mod+4 workspace number 4
+    bindsym $mod+4 workspace $ws4
     bindsym $mod+5 workspace number 5
     bindsym $mod+6 workspace number 6
     bindsym $mod+7 workspace number 7
@@ -146,7 +146,7 @@ input * {
     bindsym $mod+Shift+1 move container to workspace $ws1
     bindsym $mod+Shift+2 move container to workspace $ws2
     bindsym $mod+Shift+3 move container to workspace $ws3
-    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+4 move container to workspace $ws4
     bindsym $mod+Shift+5 move container to workspace number 5
     bindsym $mod+Shift+6 move container to workspace number 6
     bindsym $mod+Shift+7 move container to workspace number 7
@@ -228,7 +228,7 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86MonBrightnessDown exec sh -c 'brightnessctl set 5%- && p=$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) && dunstify "Brightness" "$p%" -h int:value:$p -h string:x-dunst-stack-tag:brightness -a sway-system -t 1500'
     bindsym --locked XF86MonBrightnessUp  exec sh -c 'brightnessctl set +5% && p=$(( $(brightnessctl get) * 100 / $(brightnessctl max) )) && dunstify "Brightness" "$p%" -h int:value:$p -h string:x-dunst-stack-tag:brightness -a sway-system -t 1500'
     # Special key to take a screenshot with grim
-    bindsym $mod+Shift+s exec sh -c 'grim -g "$(slurp)" - | wl-copy -t image/png'
+    bindsym $mod+Shift+s exec sh -c 'dir="$HOME/Pictures/Screenshots"; mkdir -p "$dir"; grim -g "$(slurp)" - | tee "$dir/screenshot-$(date +%Y-%m-%d_%Hh%Mm%Ss).png" | wl-copy -t image/png'
 
 #
 # For the Lols:
@@ -243,6 +243,8 @@ exec_always swayidle -w \
 # Custom Keybindings
 bindsym $mod+Ctrl+l exec swaylock --config ~/.config/swaylock/config
 bindsym --locked $mod+Shift+n exec sh -c 'if [ "$(dunstctl get-pause-level)" = "0" ]; then dunstify -a sway-system "Notifications" "Disabled" -t 1500; dunstctl set-pause-level 100; else dunstctl set-pause-level 0; dunstify -a sway-system "Notifications" "Enabled" -t 1500; fi'
+bindsym $mod+Shift+m move container to output next
+bindsym $mod+Shift+p exec sway-mirror eDP-1
 
 # Custom Settings
 for_window [class=".*"] border none
@@ -266,6 +268,13 @@ bar {
         urgent_workspace   #900000 #900000 #ffffff
     }
 }
+
+# Autostart apps once at login (for_window rules above place them on their workspaces)
+exec alacritty
+exec firefox
+exec flatpak run im.riot.Riot --password-store=gnome-libsecret
+# Focus $ws1 once the apps are placed
+exec sh -c 'sleep 1; swaymsg workspace 1:term'
 
 # Load custom screen setups 
 # exec_always kanshi -c ~/.config/kanshi/config
