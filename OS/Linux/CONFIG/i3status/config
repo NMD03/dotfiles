@@ -4,23 +4,16 @@ general {
     color_bad = "#ff6961"
     color_degraded = "#ffc067"
     interval = 5
+    # JSON for swaybar; WireGuard tunnels are added by status.sh
+    output_format = "i3bar"
 }
 
-order += "path_exists wg_home"
 order += "cpu_usage"
 order += "memory"
 order += "wireless _first_"
 order += "ethernet _first_"
 order += "battery all"
 order += "tztime local"
-
-path_exists wg_home {
-    path = "/sys/class/net/home"
-    format = "WG: work"
-    format_down = ""
-
-    color_good = "#b5c7eb"
-}
 
 wireless _first_ {
     format_up = "WiFi: %essid %quality %ip"
