@@ -47,3 +47,14 @@ wps() {
     echo "Waiting for connection..."
     watch -n 1 "nmcli device status; echo; wpa_cli -i '$iface' status 2>/dev/null | grep -E 'wpa_state|ssid|ip_address'"
 }
+
+# --- SSH keys from Bitwarden (Settings -> "Enable SSH agent") ---
+# Flatpak socket first, then a native install; otherwise keep the existing agent.
+for sock in "$HOME/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock" \
+            "$HOME/.bitwarden-ssh-agent.sock"; do
+    if [ -S "$sock" ]; then
+        export SSH_AUTH_SOCK="$sock"
+        break
+    fi
+done
+unset sock
