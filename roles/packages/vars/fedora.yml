@@ -8,3 +8,4 @@ dnf_packages:
 - fastfetch
 - fzf
 - stow
+- nss-tools  # certutil, for certs/install.sh

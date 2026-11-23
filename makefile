@@ -20,6 +20,7 @@ Linux:
 	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(XDG_CONFIG_HOME) CONFIG
 	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(HOME) HOME
 	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux -t /etc ETC
+	$(ROOT)/certs/install.sh
 	@if [ "$(DISTRO)" = "Ubuntu" ]; then \
 		echo "Applying Ubuntu-specific configurations..."; \
 		$(MAKE) ubuntu; \

@@ -20,3 +20,4 @@ apt_packages:
 cargo_packages:
 - bluetui
 - kickoff
+- libnss3-tools  # certutil, for certs/install.sh

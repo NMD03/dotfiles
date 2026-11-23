@@ -10,3 +10,4 @@ pacman_packages:
 - kickoff
 - rust
 - obsidian
+- nss  # certutil, for certs/install.sh
