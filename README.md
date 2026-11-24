@@ -29,6 +29,43 @@ If you only want to install the software you can run the setup.yml using Ansible
 ansible-playbook --ask-become-pass setup.yml
 ```
 
+## Claude Code plugin (manual step)
+
+`claude/` is a local Claude Code plugin marketplace (`niclas`) with the
+`claude-notify` plugin: a dunst notification when a session needs you
+(permission prompt, question, or finished and waiting), closed again when the
+session continues. Styling comes from the `[claude-code]` rule in
+`OS/Linux/CONFIG/dunst/dunstrc`.
+
+`make` does not install it. Run once per machine, inside Claude Code:
+
+```
+/plugin marketplace add ~/.dotfiles/claude
+/plugin install claude-notify@niclas
+```
+
+Claude Code records this in `~/.claude/settings.json` itself; the file is not
+part of this repo. Sessions that were already running don't load the hooks,
+start a new one.
+
+Claude Code runs a cached copy (`~/.claude/plugins/cache/niclas`), so after
+changing files in `claude/` (or `git pull`) update it:
+
+```
+/plugin marketplace update niclas
+/plugin update claude-notify@niclas
+```
+
+Test without a real session by feeding a hook event by hand:
+
+```bash
+echo '{"session_id":"test","cwd":"/tmp","notification_type":"permission_prompt","message":"test"}' \
+  | ~/.dotfiles/claude/claude-notify/claude-notify.sh show
+echo '{"session_id":"test"}' | ~/.dotfiles/claude/claude-notify/claude-notify.sh close
+```
+
+Remove: `/plugin uninstall claude-notify@niclas`.
+
 ## Architecture
 
 ### install.sh
