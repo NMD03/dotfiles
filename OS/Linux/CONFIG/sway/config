@@ -241,11 +241,13 @@ bindsym $mod+r mode "resize"
 bindsym Ctrl+Alt+delete exec sh -c 'dunstify "Nice Try!" "Maybe next time :(" -a sway-system -t 1500'
 
 # Automatically turn off screen when locked
-# Screen off 10 s after locking (no automatic locking while idle).
+# Screen off 10 s after locking, suspend after 5 min if still locked
+# (no automatic locking while idle).
 # before-sleep: lock when the system suspends (e.g. lid closed), so it never
 # wakes up unlocked; delete that line to disable it.
 exec swayidle -w \
     timeout 10 'pgrep -x gtklock && swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+    timeout 300 'pgrep -x gtklock && systemctl suspend' \
     before-sleep 'gtklock -d'
 
 # Custom Keybindings
