@@ -289,13 +289,13 @@ bar {
     }
 }
 
-# Autostart apps once at login (for_window rules above place them on their workspaces)
+# Autostart apps once at login (for_window rules above place them on their workspaces).
+# launch.sh: Flatpak if installed, else the native command
 exec alacritty
 exec firefox
-# Element fails if started before the keyring/portal are ready
-exec sh -c 'sleep 5; exec flatpak run im.riot.Riot --password-store=gnome-libsecret'
-exec flatpak run org.mozilla.Thunderbird
-exec flatpak run com.bitwarden.desktop
+exec ~/.config/sway/scripts/launch.sh im.riot.Riot element-desktop --password-store=gnome-libsecret
+exec ~/.config/sway/scripts/launch.sh org.mozilla.Thunderbird thunderbird
+exec ~/.config/sway/scripts/launch.sh com.bitwarden.desktop bitwarden
 # Focus $ws1 once the apps are placed
 exec sh -c 'sleep 1; swaymsg workspace 1:term'
 
