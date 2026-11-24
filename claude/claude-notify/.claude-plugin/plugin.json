@@ -1,0 +1,5 @@
+{
+  "name": "claude-notify",
+  "version": "0.1.0",
+  "description": "Dunst notification when a Claude Code session needs you"
+}

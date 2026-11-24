@@ -1,0 +1,11 @@
+{
+  "name": "niclas",
+  "owner": { "name": "NMD03" },
+  "plugins": [
+    {
+      "name": "claude-notify",
+      "source": "./claude-notify",
+      "description": "Dunst notification when a Claude Code session needs you"
+    }
+  ]
+}

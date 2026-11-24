@@ -8,3 +8,13 @@ appname = sway-system
 override_pause_level = 100
 highlight = "#d3d3d3"
 
+
+# Claude Code sessions that need you (claude-notify plugin):
+# own colours, stays until clicked or the session continues.
+# No override_pause_level: hidden while notifications are paused ($mod+Shift+n).
+[claude-code]
+appname = claude-code
+background = "#26233a"
+foreground = "#e0def4"
+frame_color = "#eb6f92"
+timeout = 0
