@@ -66,6 +66,68 @@ echo '{"session_id":"test"}' | ~/.dotfiles/claude/claude-notify/claude-notify.sh
 
 Remove: `/plugin uninstall claude-notify@niclas`.
 
+## Git commit signing (GPG, manual step)
+
+1. Apply the dotfiles (a real `~/.gitconfig` blocks stow, move it aside):
+
+   ```bash
+   [ -f ~/.gitconfig ] && [ ! -L ~/.gitconfig ] && mv ~/.gitconfig ~/.gitconfig.pre-dotfiles
+   make
+   gpg-connect-agent reloadagent /bye
+   ```
+
+2. Import the key from Bitwarden. Paste the note's **Notes** field into
+   `/tmp/key.asc` and the `ownertrust` field into `/tmp/trust.txt`, then:
+
+   ```bash
+   gpg --import /tmp/key.asc               # asks for the passphrase from the note
+   gpg --import-ownertrust /tmp/trust.txt
+   shred -u /tmp/key.asc /tmp/trust.txt
+   gpg -K 5C364F01E4081ABE0F0904B243080D701174FC32
+   ```
+
+3. Test:
+
+   ```bash
+   cd /tmp && git init signtest && cd signtest
+   git commit --allow-empty -m test        # PIN window
+   git log --show-signature -1             # "Good signature from NMD03 <nicjan01@gmail.com>"
+   cd /tmp && rm -rf signtest
+   ```
+
+### Extend the expiry
+
+Extend it in time, on a system that has the secret key:
+
+```bash
+gpg --quick-set-expire 5C364F01E4081ABE0F0904B243080D701174FC32 2y
+gpg -K 5C364F01E4081ABE0F0904B243080D701174FC32   # new [expires: …] date
+```
+
+Then update everything that holds a copy of the key:
+
+1. **GitHub**: Settings → SSH and GPG keys → delete the old key, add the
+   output of `gpg --armor --export 5C364F01E4081ABE0F0904B243080D701174FC32`.
+2. **Bitwarden**: replace the note's Notes field with
+   `gpg --export-secret-keys --armor 5C364F01E4081ABE0F0904B243080D701174FC32`
+   and update `expires`. The passphrase, ownertrust and revocation
+   certificate stay the same.
+3. **Other systems**: import the updated key there (step 2 above; importing
+   over the existing key just updates its expiry).
+
+### If the key is lost or compromised
+
+Paste the `revocation` field into `/tmp/revoke.asc`. gpg protects it against
+accidental use with a leading colon: remove the `:` in front of
+`-----BEGIN PGP PUBLIC KEY BLOCK-----`, then:
+
+```bash
+gpg --import /tmp/revoke.asc
+gpg --armor --export 5C364F01E4081ABE0F0904B243080D701174FC32   # upload to GitHub (replaces the old key)
+```
+
+Then create a new key and update `user.signingkey` in `HOME/dot-gitconfig`.
+
 ## Architecture
 
 ### install.sh

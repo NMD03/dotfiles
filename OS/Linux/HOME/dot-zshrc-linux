@@ -58,3 +58,7 @@ for sock in "$HOME/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock
     fi
 done
 unset sock
+
+# --- GPG ---
+# lets pinentry ask in the terminal when no graphical prompt is available
+export GPG_TTY=$(tty)

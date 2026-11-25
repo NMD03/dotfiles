@@ -1,0 +1,9 @@
+[user]
+	email = nicjan01@gmail.com
+	name = NMD03
+	signingkey = 5C364F01E4081ABE0F0904B243080D701174FC32
+[core]
+	editor = nvim
+[commit]
+	# every commit is signed; if signing fails or the PIN prompt is cancelled, nothing is committed
+	gpgsign = true

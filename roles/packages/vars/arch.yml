@@ -11,3 +11,4 @@ pacman_packages:
 - rust
 - obsidian
 - nss  # certutil, for certs/install.sh
+- pinentry  # PIN prompt for gpg (commit signing)

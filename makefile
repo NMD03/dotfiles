@@ -19,6 +19,10 @@ general:
 Linux:
 	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(XDG_CONFIG_HOME) CONFIG
 	$(STOW_RESTOW) -d $(ROOT)/OS/Linux -t $(HOME) HOME
+	# gpg-agent.conf is linked directly: stow 2.3 (Ubuntu) can't --dotfiles a dot-gnupg folder,
+	# and ~/.gnupg must stay a real 700 folder (it holds the secret keys)
+	install -d -m 700 $(HOME)/.gnupg
+	ln -sfn $(ROOT)/OS/Linux/gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf
 	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux -t /etc ETC
 	$(ROOT)/certs/install.sh
 	@if [ "$(DISTRO)" = "Ubuntu" ]; then \

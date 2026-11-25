@@ -21,3 +21,4 @@ cargo_packages:
 - bluetui
 - kickoff
 - libnss3-tools  # certutil, for certs/install.sh
+- pinentry-gnome3  # PIN prompt for gpg (commit signing)
