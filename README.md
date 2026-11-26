@@ -29,19 +29,24 @@ If you only want to install the software you can run the setup.yml using Ansible
 ansible-playbook --ask-become-pass setup.yml
 ```
 
-## Claude Code plugin (manual step)
+## Claude Code plugins (manual step)
 
-`claude/` is a local Claude Code plugin marketplace (`niclas`) with the
-`claude-notify` plugin: a dunst notification when a session needs you
-(permission prompt, question, or finished and waiting), closed again when the
-session continues. Styling comes from the `[claude-code]` rule in
-`OS/Linux/CONFIG/dunst/dunstrc`.
+`claude/` is a local Claude Code plugin marketplace (`niclas`) with two plugins:
 
-`make` does not install it. Run once per machine, inside Claude Code:
+- `claude-notify`: a dunst notification when a session needs you
+  (permission prompt, question, or finished and waiting), closed again when the
+  session continues. Styling comes from the `[claude-code]` rule in
+  `OS/Linux/CONFIG/dunst/dunstrc`.
+- `skills`: personal skills. Add one as `claude/skills/skills/<name>/SKILL.md`
+  (frontmatter `name` and `description`, then the instructions); it shows up
+  as `skills:<name>`.
+
+`make` does not install them. Run once per machine, inside Claude Code:
 
 ```
 /plugin marketplace add ~/.dotfiles/claude
 /plugin install claude-notify@niclas
+/plugin install skills@niclas
 ```
 
 Claude Code records this in `~/.claude/settings.json` itself; the file is not
@@ -54,6 +59,7 @@ changing files in `claude/` (or `git pull`) update it:
 ```
 /plugin marketplace update niclas
 /plugin update claude-notify@niclas
+/plugin update skills@niclas
 ```
 
 Test without a real session by feeding a hook event by hand:
@@ -64,7 +70,7 @@ echo '{"session_id":"test","cwd":"/tmp","notification_type":"permission_prompt",
 echo '{"session_id":"test"}' | ~/.dotfiles/claude/claude-notify/claude-notify.sh close
 ```
 
-Remove: `/plugin uninstall claude-notify@niclas`.
+Remove: `/plugin uninstall claude-notify@niclas` (or `skills@niclas`).
 
 ## Git commit signing (GPG, manual step)
 
