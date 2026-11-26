@@ -28,10 +28,11 @@ id=$((id % 2147483647 + 1))
 
 case "${1:-}" in
 show)
+    # category selects the frame colour in dunstrc ([claude-code-<category>])
     case "$(field notification_type)" in
-    permission_prompt) icon="⛔" ;;
-    elicitation_dialog | elicitation_url_dialog | agent_needs_input) icon="✋" ;;
-    idle_prompt) icon="💤" ;;
+    permission_prompt) category=permission label="needs permission" ;;
+    elicitation_dialog | elicitation_url_dialog | agent_needs_input) category=question label="has a question" ;;
+    idle_prompt) category=idle label="is waiting" ;;
     *) exit 0 ;; # e.g. auth_success: not worth a sticky notification
     esac
     cwd=$(field cwd)
@@ -43,7 +44,7 @@ show)
     body=${body:-Claude needs you}
     [[ -n $cwd ]] && body+=$'\n'"$cwd"
     mkdir -p "$STATE_DIR"
-    dunstify -a "$APP" -r "$id" "$icon $name" "$body" &&
+    dunstify -a "$APP" -c "claude.$category" -r "$id" "✻ $name · $label" "$body" &&
         touch "$marker"
     ;;
 close)

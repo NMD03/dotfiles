@@ -9,12 +9,29 @@ override_pause_level = 100
 highlight = "#d3d3d3"
 
 
-# Claude Code sessions that need you (claude-notify plugin):
-# own colours, stays until clicked or the session continues.
-# No override_pause_level: hidden while notifications are paused ($mod+Shift+n).
+# Claude Code sessions that need you (claude-notify plugin), "Claude dark" style:
+# warm dark background, frame colour per type (category set by claude-notify.sh).
+# Stays until clicked or the session continues. No override_pause_level:
+# hidden while notifications are paused ($mod+Shift+n).
 [claude-code]
 appname = claude-code
-background = "#26233a"
-foreground = "#e0def4"
-frame_color = "#eb6f92"
+background = "#262624"
+foreground = "#F5F4EF"
+frame_color = "#D97757"
 timeout = 0
+
+# blocked on a permission prompt: Claude orange, thicker frame
+[claude-code-permission]
+category = claude.permission
+frame_color = "#D97757"
+frame_width = 3
+
+# waiting for an answer: Claude orange
+[claude-code-question]
+category = claude.question
+frame_color = "#D97757"
+
+# finished, waiting for the next prompt: muted, less urgent
+[claude-code-idle]
+category = claude.idle
+frame_color = "#B1ADA1"
