@@ -22,9 +22,15 @@ Run management commands from the project root or any of its worktrees.
 New branches start at origin/HEAD by default (last fetched remote state).
 Use --from main to branch from the local main branch instead.
 Worktree paths default to branch names and are relative to the project root.
-Untracked configuration files are never copied or linked automatically.
 
-remove refuses if the worktree has ignored files (.env, node_modules, ...).
+add and checkout fill the new worktree from <project>/.shared/ (not in git):
+  .shared/link/<path>  symlinked to <worktree>/<path>  (e.g. .env, shared by all)
+  .shared/copy/<path>  copied to <worktree>/<path>     (e.g. a seed SQLite db)
+Only paths the branch ignores are filled; existing files are never replaced.
+Refresh a db snapshot with: sqlite3 live.db ".backup .shared/copy/<path>"
+
+remove refuses if the worktree has ignored files (copied dbs, node_modules, ...).
+Links into .shared/link don't count; removing them keeps the shared file.
   --ignored  delete those too, still refuse on uncommitted changes
   --force    delete everything, including uncommitted changes
 
@@ -33,7 +39,8 @@ git branch -avv, git push origin --delete <branch>, git worktree prune.
 HELP
 }
 
-die() { printf 'gwt: %s\n' "$*" >&2; exit 1; }
+warn() { printf 'gwt: %s\n' "$*" >&2; }
+die() { warn "$@"; exit 1; }
 need() { command -v "$1" >/dev/null 2>&1 || die "Missing command: $1"; }
 valid_branch() {
     [[ -n "$1" && "$1" != -* && "$1" != HEAD ]] &&
@@ -156,7 +163,31 @@ create_worktree() {
         repo show-ref --verify --quiet "refs/remotes/$remote/$branch" || die "Remote branch not found: $remote/$branch"
         repo worktree add --track -b "$branch" "$target" "refs/remotes/$remote/$branch"
     fi
+    seed_worktree "$target"
     printf 'Worktree: %s\n' "$target"
+}
+
+# Mirror .shared/link (symlinks) and .shared/copy (copies) into a new worktree.
+seed_worktree() {
+    local target="$1" mode src rel dst
+    for mode in link copy; do
+        [[ -d "$ROOT/.shared/$mode" ]] || continue
+        while IFS= read -r -d '' src; do
+            rel=${src#"$ROOT/.shared/$mode/"}
+            dst="$target/$rel"
+            if [[ -e "$dst" || -L "$dst" ]]; then warn "Exists, skipped $mode: $rel"; continue; fi
+            # a non-ignored path would show up in git status and could get committed
+            if ! git -C "$target" check-ignore -q -- "$rel"; then warn "Not ignored by this branch, skipped $mode: $rel"; continue; fi
+            mkdir -p -- "$(dirname -- "$dst")"
+            if [[ $mode == link ]]; then
+                # relative, so links survive moving the project folder
+                ln -s -- "$(realpath --relative-to="$(dirname -- "$dst")" -- "$src")" "$dst"
+            else
+                cp -p -- "$src" "$dst"
+            fi
+            printf '%-4s %s\n' "$mode" "$rel"
+        done < <(find "$ROOT/.shared/$mode" -type f -print0)
+    done
 }
 
 # Ahead/behind compare against the last fetch; run git fetch first for fresh numbers.
@@ -194,7 +225,7 @@ status_worktrees() {
 
 remove_worktree() {
     [[ $# -ge 1 && $# -le 2 ]] || die 'Usage: gwt remove <branch> [--ignored|--force]'
-    local target ignored opt=${2:-} force=()
+    local target f list='' n=0 opt=${2:-} force=()
     target=$(require_path "$1")
     case "$opt" in
         '' | --ignored) ;;
@@ -203,10 +234,15 @@ remove_worktree() {
     esac
     # git worktree remove deletes ignored files (.env, node_modules) without asking.
     # --ignored allows that but keeps git's refusal on uncommitted changes.
+    # Links into .shared/link are skipped: removal deletes the link, not the shared file.
     if [[ -z "$opt" && -d "$target" ]]; then
-        ignored=$(git -C "$target" ls-files --others --ignored --exclude-standard --directory)
-        [[ -z "$ignored" ]] ||
-            die "Worktree has ignored files; back them up or rerun with --ignored:"$'\n'"$ignored"
+        while IFS= read -r -d '' f; do
+            if [[ -L "$target/$f" && $(realpath -m -- "$target/$f") == "$ROOT/.shared/link/"* ]]; then continue; fi
+            n=$((n + 1))
+            if ((n <= 10)); then list+=$'\n'"$f"; fi
+        done < <(git -C "$target" ls-files -z --others --ignored --exclude-standard)
+        if ((n > 10)); then list+=$'\n'"... and $((n - 10)) more"; fi
+        ((n == 0)) || die "Worktree has ignored files; back them up or rerun with --ignored:$list"
     fi
     repo worktree remove "${force[@]}" "$target"
 }

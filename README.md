@@ -72,6 +72,103 @@ echo '{"session_id":"test"}' | ~/.dotfiles/claude/claude-notify/claude-notify.sh
 
 Remove: `/plugin uninstall claude-notify@niclas` (or `skills@niclas`).
 
+## gwt (Git worktree manager, Linux)
+
+`OS/Linux/bin/gwt` manages a repository as a bare repo with one folder per
+branch. `make` links it to `~/.local/bin/gwt`. `gwt help` lists all commands.
+Example with Vulniverse (the `backend/.env` and `backend/app.db` paths are
+placeholders, use the project's real ones).
+
+### 1. Set up the project (once)
+
+```bash
+cd ~/Projects
+gwt init git@github.com:vulnerability-lookup/Vulniverse.git
+```
+
+```
+Vulniverse/
+├── .bare/      # the Git repository
+├── .git        # pointer to .bare
+└── main/       # worktree for the default branch
+```
+
+### 2. Shared files (once)
+
+`add` and `checkout` fill each new worktree from `.shared/` (not in Git).
+Paths below `link/` and `copy/` mirror the worktree:
+
+- `.shared/link/<path>` is symlinked: config that is the same everywhere
+  (`.env`, `.claude/settings.local.json`).
+- `.shared/copy/<path>` is copied: state each branch changes on its own (a seed
+  SQLite db, so one branch's migrations don't break another).
+
+Only paths the branch's `.gitignore` ignores are filled in (others are skipped
+with a warning, so they can't get committed); existing files are never replaced.
+
+```bash
+cd ~/Projects/Vulniverse
+mkdir -p .shared/link/backend .shared/copy/backend
+
+mv main/backend/.env .shared/link/backend/.env
+ln -s ../../.shared/link/backend/.env main/backend/.env   # main predates .shared: link by hand
+
+sqlite3 main/backend/app.db ".backup .shared/copy/backend/app.db"
+```
+
+Rerun the `sqlite3 ... .backup` line to refresh the snapshot. Files added to
+`.shared/` later only reach new worktrees; link them into existing ones by hand.
+
+### 3. Daily work
+
+```bash
+cd ~/Projects/Vulniverse
+git fetch --all --prune                 # once, shared by all worktrees
+
+gwt add feature/osv-support             # new branch from origin/HEAD, fills .shared files
+cd "$(gwt path feature/osv-support)"
+npm --prefix frontend ci                # dependencies are per worktree
+claude
+```
+
+- Existing remote branch: `gwt checkout csaf`
+- Branch from local main: `gwt add feature/x --from main`
+- Shorter folder name: `gwt add feature/osv-support --path osv`
+- Publish: `git push -u origin feature/osv-support`
+- One dev server at a time: restart it from the worktree you switch to.
+
+### 4. Overview
+
+```bash
+gwt status
+```
+
+```
+BRANCH               STATUS     AHEAD  BEHIND  UPSTREAM
+csaf                 Modified       2       0  origin/csaf
+feature/osv-support  Clean          1       0  origin/feature/osv-support
+main                 Clean          0       3  origin/main
+```
+
+Counts are as of the last `git fetch`. `gwt pull main` updates `main`
+(fast-forward only).
+
+### 5. After the PR is merged
+
+```bash
+gwt remove feature/osv-support            # refuses if there are ignored files (copied db, node_modules)
+gwt remove feature/osv-support --ignored  # deletes them, still refuses on uncommitted changes
+gwt delete feature/osv-support            # --force after a squash merge
+git push origin --delete feature/osv-support   # if GitHub didn't already
+```
+
+Links into `.shared/link` don't block `remove`, and removing them keeps the
+shared file. `--force` deletes everything, including uncommitted changes.
+
+Don't move or rename the project folder: the worktrees' links to `.bare` are
+absolute (fix with `git worktree repair`). The `.shared` links are relative and
+keep working.
+
 ## Git commit signing (GPG, manual step)
 
 1. Apply the dotfiles (a real `~/.gitconfig` blocks stow, move it aside):
