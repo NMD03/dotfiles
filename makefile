@@ -23,6 +23,9 @@ Linux:
 	# and ~/.gnupg must stay a real 700 folder (it holds the secret keys)
 	install -d -m 700 $(HOME)/.gnupg
 	ln -sfn $(ROOT)/OS/Linux/gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf
+	# scripts are linked directly too: same stow 2.3 bug with a dot-local folder
+	install -d $(HOME)/.local/bin
+	ln -sfn $(ROOT)/OS/Linux/bin/gwt $(HOME)/.local/bin/gwt
 	sudo $(STOW_RESTOW) -d $(ROOT)/OS/Linux -t /etc ETC
 	$(ROOT)/certs/install.sh
 	@if [ "$(DISTRO)" = "Ubuntu" ]; then \

@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+# Worktree-first Git repository manager. Requires Bash, Git and GNU realpath.
+set -euo pipefail
+
+usage() {
+    cat <<'HELP'
+Usage: gwt <command> [arguments]
+
+  init <url> [directory]                 Set up .bare, .git and default worktree
+  add <branch> [--from ref] [--path dir]  Create a new local branch/worktree
+  checkout <branch> [--remote name] [--path dir]
+                                        Open a local or existing remote branch
+  status                                Overview of all worktrees (as of last fetch)
+  pull [branch]                         Fast-forward only; current worktree if omitted
+  path <branch>                         Print the absolute worktree path
+  move <branch> <directory>             Move a worktree within the project
+  remove <branch> [--ignored|--force]   Remove worktree, keep branch
+  delete <branch> [--force]             Delete local branch (remove worktree first)
+  help                                  Show this message
+
+Run management commands from the project root or any of its worktrees.
+New branches start at origin/HEAD by default (last fetched remote state).
+Use --from main to branch from the local main branch instead.
+Worktree paths default to branch names and are relative to the project root.
+Untracked configuration files are never copied or linked automatically.
+
+remove refuses if the worktree has ignored files (.env, node_modules, ...).
+  --ignored  delete those too, still refuse on uncommitted changes
+  --force    delete everything, including uncommitted changes
+
+Everything else is plain git: git worktree list, git fetch --all --prune,
+git branch -avv, git push origin --delete <branch>, git worktree prune.
+HELP
+}
+
+die() { printf 'gwt: %s\n' "$*" >&2; exit 1; }
+need() { command -v "$1" >/dev/null 2>&1 || die "Missing command: $1"; }
+valid_branch() {
+    [[ -n "$1" && "$1" != -* && "$1" != HEAD ]] &&
+        git check-ref-format "refs/heads/$1" >/dev/null || die "Invalid branch: $1"
+}
+valid_remote() {
+    [[ -n "$1" && "$1" != -* ]] || die "Invalid remote: $1"
+    repo remote get-url "$1" >/dev/null || die "Unknown remote: $1"
+}
+repo() { git --git-dir="$COMMON" "$@"; }
+
+find_repo() {
+    local found
+    found=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) ||
+        die 'Not inside a gwt repository.'
+    COMMON=$(realpath -e -- "$found")
+    ROOT=$(dirname -- "$COMMON")
+    [[ "$COMMON" == "$ROOT/.bare" && -f "$ROOT/.git" ]] ||
+        die 'Not a gwt repository (.bare and .git expected).'
+    [[ $(git -C "$ROOT" rev-parse --path-format=absolute --git-common-dir) == "$COMMON" &&
+       $(repo rev-parse --is-bare-repository) == true ]] || die 'Invalid bare repository layout.'
+}
+
+# Resolve a user-supplied relative path; prevent writes outside the project or
+# inside the metadata, shared config, or an already existing worktree.
+new_path() {
+    local rel="$1" abs entry existing
+    [[ -n "$rel" && "$rel" != /* ]] || die 'Worktree path must be relative to the project root.'
+    abs=$(realpath -m -- "$ROOT/$rel")
+    case "$abs" in
+        "$ROOT/.bare"|"$ROOT/.bare/"*|"$ROOT/.git"|"$ROOT/.git/"*|"$ROOT/.shared"|"$ROOT/.shared/"*)
+            die "Reserved path: $rel" ;;
+        "$ROOT/"*) ;;
+        *) die "Path is outside the project: $rel" ;;
+    esac
+    [[ ! -e "$abs" && ! -L "$abs" ]] || die "Path already exists: $abs"
+    while IFS= read -r -d '' entry; do
+        if [[ "$entry" == 'worktree '* ]]; then
+            existing=${entry#worktree }
+            [[ "$existing" == "$COMMON" ]] && continue
+            case "$abs/" in "$existing/"*) die "Path is inside an existing worktree: $existing" ;; esac
+            case "$existing/" in "$abs/"*) die "Path contains an existing worktree: $existing" ;; esac
+        fi
+    done < <(repo worktree list --porcelain -z)
+    printf '%s\n' "$abs"
+}
+
+# Porcelain with NUL delimiters handles spaces and other unusual path characters.
+branch_path() {
+    local branch="$1" entry current=''
+    while IFS= read -r -d '' entry; do
+        case "$entry" in
+            'worktree '*) current=${entry#worktree } ;;
+            "branch refs/heads/$branch") printf '%s\n' "$current"; return 0 ;;
+        esac
+    done < <(repo worktree list --porcelain -z)
+    return 1
+}
+require_path() {
+    valid_branch "$1"
+    branch_path "$1" || die "No worktree for branch '$1'. Run git worktree list or gwt checkout."
+}
+
+init_repo() {
+    [[ $# -ge 1 && $# -le 2 ]] || die 'Usage: gwt init <url> [directory]'
+    local url="$1" dir default name target
+    [[ "$url" != -* && -n "$url" ]] || die 'Invalid repository URL.'
+    name=${url%/}; name=${name##*/}; name=${name##*:}; name=${name%.git}
+    dir=${2:-$name}
+    [[ -n "$dir" && "$dir" != . && "$dir" != .. ]] || die 'Provide a new project directory.'
+    # Canonicalize a local source path before changing the Git context.
+    if [[ -d "$url" ]]; then url=$(realpath -e -- "$url"); fi
+    ROOT=$(realpath -m -- "$dir")
+    [[ ! -e "$ROOT" && ! -L "$ROOT" ]] || die "Destination already exists: $ROOT"
+    mkdir -p -- "$(dirname -- "$ROOT")"
+    mkdir -- "$ROOT"
+    COMMON="$ROOT/.bare"
+    git init --bare "$COMMON"
+    printf 'gitdir: ./.bare\n' > "$ROOT/.git"
+    repo remote add origin "$url"
+    repo config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+    if ! repo fetch --progress --prune origin || ! repo remote set-head origin -a; then
+        die "Setup incomplete at $ROOT. Check the URL, access and remote default branch. No files were removed."
+    fi
+    default=$(repo symbolic-ref --short refs/remotes/origin/HEAD)
+    default=${default#origin/}
+    valid_branch "$default"
+    target=$(new_path "$default")
+    repo symbolic-ref HEAD "refs/heads/$default"
+    repo worktree add --track -b "$default" "$target" "refs/remotes/origin/$default"
+    printf '\nProject: %s\nWorktree: %s\n' "$ROOT" "$target"
+}
+
+create_worktree() {
+    local mode="$1" branch rel from='' remote=origin target current
+    shift
+    [[ $# -ge 1 ]] || die "Usage: gwt $mode <branch> [options]"
+    branch="$1"; shift; valid_branch "$branch"; rel="$branch"
+    while (($#)); do
+        case "$1" in
+            --path) [[ $# -ge 2 ]] || die '--path needs a directory'; rel="$2"; shift 2 ;;
+            --from) [[ "$mode" == add && $# -ge 2 ]] || die '--from is only valid for add and needs a ref'; from="$2"; shift 2 ;;
+            --remote) [[ "$mode" == checkout && $# -ge 2 ]] || die '--remote is only valid for checkout and needs a name'; remote="$2"; shift 2 ;;
+            *) die "Unknown option: $1" ;;
+        esac
+    done
+    if current=$(branch_path "$branch"); then die "Branch already has a worktree: $current"; fi
+    target=$(new_path "$rel")
+    if [[ "$mode" == add ]]; then
+        if repo show-ref --verify --quiet "refs/heads/$branch"; then die "Local branch exists: $branch (use checkout)"; fi
+        from=${from:-refs/remotes/origin/HEAD}
+        local commit
+        commit=$(repo rev-parse --verify --end-of-options "$from^{commit}") || die "Invalid starting ref: $from"
+        repo worktree add --no-track -b "$branch" "$target" "$commit"
+    elif repo show-ref --verify --quiet "refs/heads/$branch"; then
+        repo worktree add "$target" "$branch"
+    else
+        valid_remote "$remote"
+        repo fetch --prune "$remote"
+        repo show-ref --verify --quiet "refs/remotes/$remote/$branch" || die "Remote branch not found: $remote/$branch"
+        repo worktree add --track -b "$branch" "$target" "refs/remotes/$remote/$branch"
+    fi
+    printf 'Worktree: %s\n' "$target"
+}
+
+# Ahead/behind compare against the last fetch; run git fetch first for fresh numbers.
+status_worktrees() {
+    [[ $# -eq 0 ]] || die 'Usage: gwt status'
+    local entry path='' line state upstream ahead behind i w=6 paths=() branches=()
+    while IFS= read -r -d '' entry; do
+        case "$entry" in
+            'worktree '*) path=${entry#worktree } ;;
+            'branch refs/heads/'*) paths+=("$path"); branches+=("${entry#branch refs/heads/}") ;;
+            detached) paths+=("$path"); branches+=('(detached)') ;;
+        esac
+    done < <(repo worktree list --porcelain -z)
+    for i in "${!branches[@]}"; do if ((${#branches[i]} > w)); then w=${#branches[i]}; fi; done
+    printf "%-${w}s  %-9s  %5s  %6s  %s\n" BRANCH STATUS AHEAD BEHIND UPSTREAM
+    for i in "${!paths[@]}"; do
+        state=Clean upstream=None ahead=- behind=-
+        if [[ ! -d "${paths[i]}" ]]; then
+            state=Missing
+        else
+            while IFS= read -r line; do
+                case "$line" in
+                    '# branch.upstream '*) upstream=${line#'# branch.upstream '} ;;
+                    '# branch.ab '*) read -r ahead behind <<<"${line#'# branch.ab '}"; ahead=${ahead#+}; behind=${behind#-} ;;
+                    [12u]' '*) state=Modified ;;
+                    '? '*) if [[ $state == Clean ]]; then state=Untracked; fi ;;
+                esac
+            done < <(git -C "${paths[i]}" status --porcelain=v2 --branch)
+            # upstream set but no counts: the remote branch was deleted
+            if [[ $upstream != None && $ahead == - ]]; then upstream+=' (gone)'; fi
+        fi
+        printf "%-${w}s  %-9s  %5s  %6s  %s\n" "${branches[i]}" "$state" "$ahead" "$behind" "$upstream"
+    done
+}
+
+remove_worktree() {
+    [[ $# -ge 1 && $# -le 2 ]] || die 'Usage: gwt remove <branch> [--ignored|--force]'
+    local target ignored opt=${2:-} force=()
+    target=$(require_path "$1")
+    case "$opt" in
+        '' | --ignored) ;;
+        --force) force=(--force) ;;
+        *) die 'Only --ignored or --force is supported.' ;;
+    esac
+    # git worktree remove deletes ignored files (.env, node_modules) without asking.
+    # --ignored allows that but keeps git's refusal on uncommitted changes.
+    if [[ -z "$opt" && -d "$target" ]]; then
+        ignored=$(git -C "$target" ls-files --others --ignored --exclude-standard --directory)
+        [[ -z "$ignored" ]] ||
+            die "Worktree has ignored files; back them up or rerun with --ignored:"$'\n'"$ignored"
+    fi
+    repo worktree remove "${force[@]}" "$target"
+}
+
+main() {
+    need git; need realpath
+    local cmd=${1:-help} branch target
+    if (($#)); then shift; fi
+    case "$cmd" in
+        help|-h|--help) usage; return ;;
+        init) init_repo "$@"; return ;;
+        add|checkout|status|pull|path|move|remove|delete) ;;
+        *) die "Unknown command: $cmd (see gwt help)" ;;
+    esac
+    find_repo
+    case "$cmd" in
+        add|checkout) create_worktree "$cmd" "$@" ;;
+        status) status_worktrees "$@" ;;
+        pull)
+            [[ $# -le 1 ]] || die 'Usage: gwt pull [branch]'
+            if (($#)); then target=$(require_path "$1");
+            else target=$(git rev-parse --show-toplevel 2>/dev/null) || die 'Specify a branch when running from the project root.'; fi
+            git -C "$target" pull --ff-only ;;
+        path) [[ $# -eq 1 ]] || die 'Usage: gwt path <branch>'; require_path "$1" ;;
+        move)
+            [[ $# -eq 2 ]] || die 'Usage: gwt move <branch> <directory>'
+            target=$(require_path "$1"); local dest; dest=$(new_path "$2")
+            mkdir -p -- "$(dirname -- "$dest")"
+            repo worktree move "$target" "$dest" ;;
+        remove) remove_worktree "$@" ;;
+        delete)
+            [[ $# -ge 1 && $# -le 2 && ( $# -eq 1 || "$2" == --force ) ]] ||
+                die 'Usage: gwt delete <branch> [--force]'
+            branch="$1"; valid_branch "$branch"
+            if target=$(branch_path "$branch"); then die "Remove the worktree first: $target"; fi
+            if [[ $# -eq 2 ]]; then repo branch -D -- "$branch"; else repo branch -d -- "$branch"; fi ;;
+    esac
+}
+
+main "$@"
